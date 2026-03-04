@@ -77,8 +77,8 @@
     }
   },
   "logo": {
-    "light": "/logo/dark.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/logo.svg",
+    "dark": "/logo/logo.svg"
   },
   "api": {
     "baseUrl": "https://api.urantia.dev"
