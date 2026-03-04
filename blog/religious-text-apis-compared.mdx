@@ -1,0 +1,140 @@
+---
+title: "Bible API vs Quran API vs Urantia API - Religious Text APIs Compared"
+sidebarTitle: "Religious Text APIs Compared"
+description: "A practical comparison of public APIs for religious texts: Bible API, Quran API, and Urantia Papers API. Compare features, authentication, search, audio, and developer experience."
+---
+
+Developers building applications with religious and spiritual texts now have several API options. This comparison examines the most popular public APIs for scripture and spiritual content, helping you choose the right one for your project.
+
+## The APIs
+
+| Feature | Bible API (api.scripture.api.bible) | Quran API (alquran.cloud) | Urantia Papers API (api.urantia.dev) |
+|---------|------|-----------|------|
+| **Auth Required** | Yes (API key) | No | No |
+| **Rate Limit** | 5,000/day | Varies | 100/min (6,000/hr) |
+| **Search** | Full-text | Full-text | Full-text with modes (and/or/phrase) |
+| **Audio** | Some translations | Full Arabic recitations | Full TTS (6 voices, 2 models) |
+| **OpenAPI Spec** | Yes | No | Yes (3.1) |
+| **Swagger UI** | No | No | Yes |
+| **Translations** | 2,500+ | 100+ | English (original language) |
+| **Content Size** | 66 books, 31K verses | 114 surahs, 6,236 ayahs | 197 papers, 14,500+ paragraphs |
+
+## Bible API
+
+The most mature religious text API ecosystem. [api.scripture.api.bible](https://scripture.api.bible) (by American Bible Society) provides access to thousands of Bible translations.
+
+**Strengths:**
+- Enormous translation library (2,500+ versions)
+- Well-documented with SDKs
+- Rich metadata (book intros, cross-references)
+
+**Limitations:**
+- Requires API key registration
+- Daily rate limits
+- Some translations restrict usage
+
+**Best for:** Multi-language Bible apps, translation comparison tools, church software.
+
+## Quran API
+
+[alquran.cloud](https://alquran.cloud/api) provides free access to the Quran with extensive Arabic recitation audio.
+
+**Strengths:**
+- No authentication required
+- Excellent Arabic audio with multiple famous reciters
+- 100+ translations
+- Simple, clean API design
+
+**Limitations:**
+- No formal OpenAPI specification
+- Limited search capabilities compared to others
+- No interactive docs
+
+**Best for:** Islamic apps, Arabic learning tools, recitation players.
+
+## Urantia Papers API
+
+[api.urantia.dev](https://api.urantia.dev) is the only public API for the Urantia Book, built specifically for developers and AI agents.
+
+**Strengths:**
+- Zero authentication — completely open
+- Full-text search with three modes (and, or, phrase)
+- AI-optimized with context window endpoint for RAG
+- Complete TTS audio coverage (6 voices, 14,500+ paragraphs)
+- OpenAPI 3.1 spec with Swagger UI
+- Three paragraph reference formats
+
+**Limitations:**
+- English only (the Urantia Book's original language)
+- Single text (the Urantia Book)
+- Newer API with smaller community
+
+**Best for:** AI/LLM applications, Urantia study tools, audio apps, spiritual content aggregators.
+
+## Developer Experience Comparison
+
+### Getting Started
+
+**Bible API:** Register for an API key, read documentation, include key in headers.
+```bash
+curl -H "api-key: YOUR_KEY" "https://api.scripture.api.bible/v1/bibles"
+```
+
+**Quran API:** No setup needed.
+```bash
+curl "https://api.alquran.cloud/v1/ayah/262/en.asad"
+```
+
+**Urantia API:** No setup needed.
+```bash
+curl https://api.urantia.dev/paragraphs/random
+```
+
+### Search
+
+**Bible API:**
+```bash
+curl -H "api-key: KEY" \
+  "https://api.scripture.api.bible/v1/bibles/BIBLE_ID/search?query=love"
+```
+
+**Quran API:**
+```bash
+curl "https://api.alquran.cloud/v1/search/love/all/en"
+```
+
+**Urantia API:**
+```bash
+curl -X POST https://api.urantia.dev/search \
+  -H "Content-Type: application/json" \
+  -d '{"q": "love", "type": "and", "limit": 10}'
+```
+
+### Context Retrieval (for AI/RAG)
+
+This is where the Urantia API particularly shines — it was designed with AI integration in mind:
+
+```bash
+# Get a paragraph with 3 surrounding paragraphs on each side
+curl "https://api.urantia.dev/paragraphs/2:5.10/context?window=3"
+```
+
+Neither the Bible API nor the Quran API offers a comparable context window feature, which is essential for RAG applications.
+
+## Which Should You Use?
+
+- **Building a multi-faith app?** Use all three — they're complementary
+- **Building for a church/mosque/study group?** Use the API matching your community's text
+- **Building an AI/LLM application?** The Urantia API's context endpoint and search modes make it ideal for RAG; for Bible content, consider building your own context layer on top of the Bible API
+- **Building an audio app?** All three offer audio, but the Urantia API's TTS coverage with multiple voices is unique
+
+## Try the Urantia Papers API
+
+```bash
+# No signup, no API key — just start
+curl https://api.urantia.dev/paragraphs/random
+```
+
+<Card title="Get Started" icon="rocket" href="/quickstart">
+  Make your first API call in under 60 seconds.
+</Card>

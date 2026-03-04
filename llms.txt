@@ -1,0 +1,75 @@
+# Urantia Papers API
+
+> Free, open REST API for structured access to the Urantia Book
+
+The Urantia Papers API provides developer and AI-agent friendly access to all 197 papers, 1,626 sections, and 14,500+ paragraphs of the Urantia Book with full-text search and multi-voice audio narration.
+
+## Base URL
+
+https://api.urantia.dev
+
+## Authentication
+
+No authentication required. Free and open access.
+
+## Rate Limits
+
+100 requests per minute per IP address.
+
+## Endpoints
+
+### Table of Contents
+- GET /toc — Full table of contents (parts, papers, titles)
+
+### Papers
+- GET /papers — List all 197 papers with metadata
+- GET /papers/:id — Get a single paper with all paragraphs
+- GET /papers/:id/sections — Get sections for a paper
+
+### Paragraphs
+- GET /paragraphs/random — Get a random paragraph
+- GET /paragraphs/:ref — Get a specific paragraph by reference
+- GET /paragraphs/:ref/context?window=3 — Get paragraph with surrounding context (window: 1-10)
+
+### Search
+- POST /search — Full-text search across all paragraphs
+  - Body: {"q": "search terms", "type": "and|or|phrase", "limit": 10}
+  - Filters: paperId, partId
+
+### Audio
+- GET /audio/:paragraphId — Get audio URLs for a paragraph
+
+## Paragraph Reference Formats
+
+Three formats are auto-detected:
+- globalId: partId:paperId.sectionId.paragraphId (e.g., 1:2.0.1)
+- standardReferenceId: paperId:sectionId.paragraphId (e.g., 2:0.1)
+- paperSectionParagraphId: paperId.sectionId.paragraphId (e.g., 2.0.1)
+
+## Audio
+
+Every paragraph has audio narration. Models: tts-1-hd, tts-1. Voices: nova, echo, onyx, alloy, fable, shimmer. Full coverage with tts-1-hd/nova. Audio served from audio.urantia.dev via Cloudflare CDN.
+
+## OpenAPI Specification
+
+https://api.urantia.dev/openapi.json
+
+## Interactive Documentation
+
+https://api.urantia.dev/docs (Swagger UI)
+
+## Related Sites
+
+- Documentation: https://urantia.dev
+- Reading Platform: https://urantiahub.com
+- Reader App: https://urantiapapers.com
+
+## About the Urantia Book
+
+The Urantia Book (published 1955) contains 197 papers organized in four parts:
+- Part I: The Central and Superuniverses (Papers 1-31)
+- Part II: The Local Universe (Papers 32-56)
+- Part III: The History of Urantia (Papers 57-119)
+- Part IV: The Life and Teachings of Jesus (Papers 120-196)
+
+The Foreword is Paper 0.

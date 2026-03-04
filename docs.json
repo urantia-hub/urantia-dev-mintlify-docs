@@ -8,6 +8,22 @@
     "dark": "#1D4ED8"
   },
   "favicon": "/favicon.svg",
+  "head": [
+    {
+      "tag": "script",
+      "attributes": {
+        "type": "application/ld+json"
+      },
+      "children": "{\"@context\":\"https://schema.org\",\"@type\":\"WebAPI\",\"name\":\"Urantia Papers API\",\"description\":\"Free, open REST API providing structured access to all 197 papers, 14,500+ paragraphs, full-text search, and audio narration of the Urantia Book.\",\"url\":\"https://api.urantia.dev\",\"documentationUrl\":\"https://urantia.dev\",\"provider\":{\"@type\":\"Organization\",\"name\":\"Urantia.dev\",\"url\":\"https://urantia.dev\"}}"
+    },
+    {
+      "tag": "script",
+      "attributes": {
+        "type": "application/ld+json"
+      },
+      "children": "{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Urantia Papers API\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Any\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"url\":\"https://urantia.dev\",\"description\":\"Free REST API for accessing Urantia Book content including full-text search, structured paragraphs, and audio narration.\"}"
+    }
+  ],
   "navigation": {
     "tabs": [
       {
@@ -20,6 +36,10 @@
           {
             "group": "For AI Agents",
             "pages": ["ai-agents"]
+          },
+          {
+            "group": "More",
+            "pages": ["use-cases"]
           }
         ]
       },
@@ -59,6 +79,80 @@
             "pages": ["api-reference/endpoint/get-audio"]
           }
         ]
+      },
+      {
+        "tab": "Concepts",
+        "groups": [
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/thought-adjusters",
+              "concepts/the-soul",
+              "concepts/personality-survival",
+              "concepts/adjuster-fusion"
+            ]
+          },
+          {
+            "group": "Cosmology",
+            "pages": [
+              "concepts/paradise",
+              "concepts/havona",
+              "concepts/grand-universe",
+              "concepts/local-universe",
+              "concepts/nebadon"
+            ]
+          },
+          {
+            "group": "Spiritual Growth",
+            "pages": [
+              "concepts/mansion-worlds",
+              "concepts/morontia",
+              "concepts/morontia-mota",
+              "concepts/seraphim",
+              "concepts/lucifer-rebellion",
+              "concepts/supreme-being"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Quotes",
+        "groups": [
+          {
+            "group": "Quote Collections",
+            "pages": [
+              "quotes/love",
+              "quotes/faith",
+              "quotes/prayer",
+              "quotes/death",
+              "quotes/god",
+              "quotes/jesus",
+              "quotes/truth",
+              "quotes/soul",
+              "quotes/forgiveness",
+              "quotes/family",
+              "quotes/courage",
+              "quotes/service",
+              "quotes/wisdom",
+              "quotes/hope",
+              "quotes/peace"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Blog",
+        "groups": [
+          {
+            "group": "Articles",
+            "pages": [
+              "blog/religious-text-apis-compared",
+              "blog/building-urantia-ai-chatbot",
+              "blog/urantia-book-for-beginners",
+              "blog/mcp-server-urantia-book"
+            ]
+          }
+        ]
       }
     ],
     "global": {
@@ -72,6 +166,11 @@
           "anchor": "OpenAPI Spec",
           "href": "https://api.urantia.dev/openapi.json",
           "icon": "code"
+        },
+        {
+          "anchor": "Read the Papers",
+          "href": "https://urantiahub.com",
+          "icon": "book-open"
         }
       ]
     }

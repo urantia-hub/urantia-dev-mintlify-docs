@@ -1,0 +1,197 @@
+---
+title: "Building an MCP Server for the Urantia Book"
+sidebarTitle: "MCP Server Guide"
+description: "Learn how to build a Model Context Protocol (MCP) server that gives AI assistants like Claude access to the Urantia Book through the Urantia Papers API."
+---
+
+The Model Context Protocol (MCP) lets AI assistants access external data sources through a standardized interface. This guide shows how to build an MCP server that gives Claude (and other MCP-compatible assistants) the ability to search and read the Urantia Book.
+
+## What Is MCP?
+
+MCP (Model Context Protocol) is an open standard created by Anthropic that allows AI models to interact with external tools and data sources. Instead of relying solely on training data, an AI assistant with MCP access can query live APIs, read files, and perform actions.
+
+An MCP server for the Urantia Book would give any MCP-compatible AI assistant the ability to:
+- Search the Urantia Papers by keyword
+- Read specific paragraphs with context
+- Browse the table of contents
+- Access audio URLs for any paragraph
+
+## Architecture
+
+```
+AI Assistant (Claude) <-> MCP Client <-> MCP Server <-> Urantia Papers API
+```
+
+The MCP server acts as a bridge between the AI assistant and the Urantia Papers API, translating MCP tool calls into API requests.
+
+## Step 1: Set Up the Project
+
+```bash
+mkdir urantia-mcp-server
+cd urantia-mcp-server
+npm init -y
+npm install @modelcontextprotocol/sdk
+```
+
+## Step 2: Define the Tools
+
+```typescript
+// src/index.ts
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
+
+const API_BASE = "https://api.urantia.dev";
+
+const server = new McpServer({
+  name: "urantia-papers",
+  version: "1.0.0",
+});
+
+// Tool: Search the Urantia Papers
+server.tool(
+  "search",
+  "Search the Urantia Papers for relevant passages",
+  {
+    query: z.string().describe("The search query"),
+    type: z.enum(["and", "or", "phrase"]).default("and")
+      .describe("Search mode: 'and' (all words), 'or' (any word), 'phrase' (exact)"),
+    limit: z.number().min(1).max(50).default(10)
+      .describe("Maximum number of results"),
+  },
+  async ({ query, type, limit }) => {
+    const response = await fetch(`${API_BASE}/search`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ q: query, type, limit }),
+    });
+    const data = await response.json();
+    const text = data.results
+      .map((r: any) => `[${r.standardReferenceId}] ${r.text}`)
+      .join("\n\n");
+    return { content: [{ type: "text", text }] };
+  }
+);
+
+// Tool: Get a paragraph with surrounding context
+server.tool(
+  "get_context",
+  "Get a Urantia Book paragraph with surrounding context",
+  {
+    reference: z.string().describe("Paragraph reference (e.g., '2:5.10' or '107:0.1')"),
+    window: z.number().min(1).max(10).default(3)
+      .describe("Number of surrounding paragraphs to include"),
+  },
+  async ({ reference, window }) => {
+    const response = await fetch(
+      `${API_BASE}/paragraphs/${reference}/context?window=${window}`
+    );
+    const data = await response.json();
+    const text = data.paragraphs
+      .map((p: any) => `[${p.standardReferenceId}] ${p.text}`)
+      .join("\n\n");
+    return { content: [{ type: "text", text }] };
+  }
+);
+
+// Tool: Read a full paper
+server.tool(
+  "read_paper",
+  "Read a full paper from the Urantia Book",
+  {
+    paperId: z.number().min(0).max(196).describe("Paper number (0-196)"),
+  },
+  async ({ paperId }) => {
+    const response = await fetch(`${API_BASE}/papers/${paperId}`);
+    const data = await response.json();
+    const text = data.paragraphs
+      .map((p: any) => `[${p.standardReferenceId}] ${p.text}`)
+      .join("\n\n");
+    return {
+      content: [{
+        type: "text",
+        text: `# Paper ${paperId}: ${data.title}\n\n${text}`
+      }]
+    };
+  }
+);
+
+// Tool: Get table of contents
+server.tool(
+  "get_toc",
+  "Get the Urantia Book table of contents",
+  {},
+  async () => {
+    const response = await fetch(`${API_BASE}/toc`);
+    const data = await response.json();
+    const text = data.parts
+      .map((part: any) =>
+        `## Part ${part.id}: ${part.title}\n` +
+        part.papers.map((p: any) => `  - Paper ${p.id}: ${p.title}`).join("\n")
+      )
+      .join("\n\n");
+    return { content: [{ type: "text", text }] };
+  }
+);
+
+// Start the server
+const transport = new StdioServerTransport();
+await server.connect(transport);
+```
+
+## Step 3: Configure for Claude Desktop
+
+Add the server to your Claude Desktop configuration (`claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "urantia-papers": {
+      "command": "npx",
+      "args": ["tsx", "/path/to/urantia-mcp-server/src/index.ts"]
+    }
+  }
+}
+```
+
+## Step 4: Use It
+
+Once configured, Claude can now:
+
+- **"Search the Urantia Book for passages about love"** — Uses the `search` tool
+- **"Read Paper 107 about Thought Adjusters"** — Uses the `read_paper` tool
+- **"Show me the context around passage 2:5.10"** — Uses the `get_context` tool
+- **"What papers are in Part IV?"** — Uses the `get_toc` tool
+
+## Adding Resources (Optional)
+
+MCP also supports resources — static content the AI can reference. You could add the table of contents as a resource:
+
+```typescript
+server.resource(
+  "toc",
+  "urantia://toc",
+  async (uri) => {
+    const response = await fetch(`${API_BASE}/toc`);
+    const data = await response.json();
+    return {
+      contents: [{
+        uri: uri.href,
+        mimeType: "application/json",
+        text: JSON.stringify(data, null, 2),
+      }],
+    };
+  }
+);
+```
+
+## Tips
+
+- **Use `type: "and"` for specific searches** to get precise results
+- **The context endpoint is your best friend** — always use it after search to give the AI full narrative context
+- **Keep paper reads selective** — full papers can be very long; prefer search + context for most queries
+- **Cache responses** — the API returns `Cache-Control` headers; respect them to stay within rate limits
+
+<Card title="OpenAPI Spec" icon="code" href="https://api.urantia.dev/openapi.json">
+  Use the full OpenAPI spec to generate clients or explore all endpoints.
+</Card>

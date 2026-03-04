@@ -1,0 +1,161 @@
+---
+title: "Use Cases - What You Can Build with the Urantia Papers API"
+sidebarTitle: "Use Cases"
+description: "Explore practical use cases for the Urantia Papers API: daily quote apps, AI chatbots, study tools, audio apps, research tools, and more. Includes code examples for each."
+---
+
+The Urantia Papers API enables developers and creators to build a wide range of applications. Here are the most popular use cases with working code examples.
+
+## Daily Quote App
+
+Send or display a random inspiring quote from the Urantia Book every day.
+
+```bash
+# Get a random paragraph
+curl https://api.urantia.dev/paragraphs/random
+```
+
+```javascript
+// Daily quote in JavaScript
+async function getDailyQuote() {
+  const res = await fetch('https://api.urantia.dev/paragraphs/random');
+  const data = await res.json();
+  return {
+    text: data.text,
+    reference: data.standardReferenceId,
+    paper: data.paperTitle
+  };
+}
+```
+
+**Ideas:** Email newsletters, social media bots, browser extensions, mobile widgets.
+
+## AI Chatbot / RAG Application
+
+Build an AI assistant that can answer questions about the Urantia Book with source citations.
+
+```python
+import requests
+
+def search_urantia(query, limit=5):
+    """Search the Urantia Papers and return relevant passages."""
+    response = requests.post(
+        "https://api.urantia.dev/search",
+        json={"q": query, "type": "and", "limit": limit}
+    )
+    return response.json()["results"]
+
+def get_context(ref, window=3):
+    """Get surrounding context for a passage."""
+    response = requests.get(
+        f"https://api.urantia.dev/paragraphs/{ref}/context?window={window}"
+    )
+    return response.json()
+
+# Example: Build context for an LLM prompt
+results = search_urantia("What happens after death?")
+context_passages = []
+for result in results:
+    ctx = get_context(result["standardReferenceId"])
+    context_passages.append(ctx)
+```
+
+**Ideas:** Telegram/Discord bots, ChatGPT plugins, study assistants, Slack integrations.
+
+<Tip>
+See our [AI Agent Integration guide](/ai-agents) for the recommended RAG workflow.
+</Tip>
+
+## Study Tool
+
+Build interactive study tools with cross-references, bookmarks, and reading progress.
+
+```bash
+# Get the table of contents for navigation
+curl https://api.urantia.dev/toc
+
+# Read a specific paper
+curl https://api.urantia.dev/papers/1
+
+# Get a section's paragraphs
+curl https://api.urantia.dev/papers/1/sections
+```
+
+**Ideas:** Reading plans, topic explorers, parallel study viewers, flashcard generators.
+
+## Audio Application
+
+Create listening experiences for the Urantia Book with multiple voice options.
+
+```bash
+# Get audio URLs for a paragraph
+curl https://api.urantia.dev/audio/1:0.1
+
+# Full paper with audio included
+curl https://api.urantia.dev/papers/1
+# (audio field included in each paragraph)
+```
+
+```javascript
+// Build an audio player playlist for a paper
+async function getPaperAudio(paperId) {
+  const res = await fetch(`https://api.urantia.dev/papers/${paperId}`);
+  const data = await res.json();
+  return data.paragraphs
+    .filter(p => p.audio?.['tts-1-hd']?.nova)
+    .map(p => ({
+      url: p.audio['tts-1-hd'].nova.url,
+      ref: p.standardReferenceId,
+      text: p.text.substring(0, 100)
+    }));
+}
+```
+
+**Ideas:** Podcast feeds, audiobook apps, background listening players, accessibility tools.
+
+## Research & Analysis Tool
+
+Search and analyze the text of the Urantia Book for research purposes.
+
+```bash
+# Search for a specific concept
+curl -X POST https://api.urantia.dev/search \
+  -H "Content-Type: application/json" \
+  -d '{"q": "Thought Adjuster", "type": "and", "limit": 50}'
+
+# Exact phrase search
+curl -X POST https://api.urantia.dev/search \
+  -H "Content-Type: application/json" \
+  -d '{"q": "spirit of truth", "type": "phrase", "limit": 20}'
+
+# Search within a specific paper
+curl -X POST https://api.urantia.dev/search \
+  -H "Content-Type: application/json" \
+  -d '{"q": "love", "paperId": 56, "limit": 20}'
+```
+
+**Ideas:** Concordance tools, topic frequency analyzers, cross-reference builders, textual studies.
+
+## Client Generation
+
+Generate a typed API client in any language from the OpenAPI spec.
+
+```bash
+# Download the OpenAPI specification
+curl https://api.urantia.dev/openapi.json -o openapi.json
+
+# Generate a TypeScript client (using openapi-generator)
+npx @openapitools/openapi-generator-cli generate \
+  -i openapi.json -g typescript-fetch -o ./urantia-client
+```
+
+## Getting Started
+
+1. No signup or API key needed — start making requests immediately
+2. Base URL: `https://api.urantia.dev`
+3. Rate limit: 100 requests/minute
+4. All responses are JSON with `Cache-Control` headers
+
+<Card title="API Reference" icon="terminal" href="/api-reference/introduction">
+  Explore all 9 endpoints with interactive examples.
+</Card>

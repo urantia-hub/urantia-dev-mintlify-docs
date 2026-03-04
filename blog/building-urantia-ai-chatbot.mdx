@@ -1,0 +1,203 @@
+---
+title: "Building a Urantia Book AI Chatbot with RAG"
+sidebarTitle: "Building a UB AI Chatbot"
+description: "Step-by-step tutorial for building an AI chatbot that answers questions about the Urantia Book using RAG (Retrieval-Augmented Generation) with the Urantia Papers API and OpenAI."
+---
+
+This tutorial walks through building an AI chatbot that can answer questions about the Urantia Book with accurate citations, using the Urantia Papers API for retrieval and OpenAI for generation.
+
+## Architecture
+
+The chatbot follows the RAG (Retrieval-Augmented Generation) pattern:
+
+1. **User asks a question** about the Urantia Book
+2. **Search** the Urantia Papers API for relevant passages
+3. **Retrieve context** around the top results
+4. **Generate** an answer using an LLM with the retrieved passages as context
+5. **Return** the answer with source citations
+
+## Prerequisites
+
+- Node.js 18+ or Python 3.10+
+- An OpenAI API key (for the LLM)
+- No Urantia API key needed (it's free and open)
+
+## Step 1: Search for Relevant Passages
+
+```typescript
+async function searchUrantia(query: string, limit = 5) {
+  const response = await fetch('https://api.urantia.dev/search', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ q: query, type: 'and', limit })
+  });
+  const data = await response.json();
+  return data.results;
+}
+```
+
+The search endpoint supports three modes:
+- `and` — All words must appear (best for specific queries)
+- `or` — Any word can appear (best for broad exploration)
+- `phrase` — Exact phrase match (best for quoting)
+
+## Step 2: Get Surrounding Context
+
+The context endpoint is critical for RAG quality. A single paragraph often lacks the full meaning — surrounding paragraphs provide narrative flow.
+
+```typescript
+async function getContext(ref: string, window = 3) {
+  const response = await fetch(
+    `https://api.urantia.dev/paragraphs/${ref}/context?window=${window}`
+  );
+  return response.json();
+}
+```
+
+The `window` parameter (1-10) controls how many paragraphs before and after the target are included.
+
+## Step 3: Build the Prompt
+
+```typescript
+async function buildPrompt(question: string) {
+  // Search for relevant passages
+  const results = await searchUrantia(question, 5);
+
+  // Get context for top 3 results
+  const contexts = await Promise.all(
+    results.slice(0, 3).map(r => getContext(r.standardReferenceId, 2))
+  );
+
+  // Format passages for the LLM
+  const passages = contexts.map(ctx => {
+    const paragraphs = ctx.paragraphs
+      .map(p => `[${p.standardReferenceId}] ${p.text}`)
+      .join('\n\n');
+    return paragraphs;
+  }).join('\n\n---\n\n');
+
+  return `You are a knowledgeable assistant about the Urantia Book. Answer the user's question based ONLY on the provided passages. Always cite specific paper references (e.g., Paper 107:0.2) for your claims. If the passages don't contain enough information to answer, say so.
+
+## Relevant Passages from the Urantia Book
+
+${passages}
+
+## User Question
+
+${question}`;
+}
+```
+
+## Step 4: Generate the Answer
+
+```typescript
+import OpenAI from 'openai';
+
+const openai = new OpenAI();
+
+async function askUrantia(question: string) {
+  const prompt = await buildPrompt(question);
+
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    messages: [
+      { role: 'system', content: prompt },
+      { role: 'user', content: question }
+    ],
+    temperature: 0.3, // Lower temperature for factual accuracy
+  });
+
+  return completion.choices[0].message.content;
+}
+
+// Example usage
+const answer = await askUrantia('What are Thought Adjusters?');
+console.log(answer);
+```
+
+## Step 5: Add Streaming (Optional)
+
+For a better user experience, stream the response:
+
+```typescript
+async function askUrantiaStream(question: string) {
+  const prompt = await buildPrompt(question);
+
+  const stream = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    messages: [
+      { role: 'system', content: prompt },
+      { role: 'user', content: question }
+    ],
+    temperature: 0.3,
+    stream: true,
+  });
+
+  for await (const chunk of stream) {
+    const content = chunk.choices[0]?.delta?.content || '';
+    process.stdout.write(content);
+  }
+}
+```
+
+## Tips for Better Results
+
+1. **Use `type: "and"` for specific questions** and `type: "or"` for exploratory ones
+2. **Increase the context window** for complex topics — `window=5` gives broader narrative context
+3. **Search with key terms** from the Urantia Book's vocabulary (e.g., "Thought Adjuster" instead of "inner spirit")
+4. **Filter by paper** when you know the relevant section — use the `paperId` parameter
+5. **Lower the temperature** (0.2-0.4) for factual accuracy; raise it (0.6-0.8) for more creative explanations
+
+## Full Example (Python)
+
+```python
+import requests
+import openai
+
+def search_urantia(query, limit=5):
+    r = requests.post("https://api.urantia.dev/search",
+                       json={"q": query, "type": "and", "limit": limit})
+    return r.json()["results"]
+
+def get_context(ref, window=3):
+    r = requests.get(f"https://api.urantia.dev/paragraphs/{ref}/context?window={window}")
+    return r.json()
+
+def ask_urantia(question):
+    results = search_urantia(question, 5)
+    contexts = [get_context(r["standardReferenceId"], 2) for r in results[:3]]
+
+    passages = "\n\n---\n\n".join([
+        "\n\n".join([f'[{p["standardReferenceId"]}] {p["text"]}'
+                     for p in ctx["paragraphs"]])
+        for ctx in contexts
+    ])
+
+    response = openai.chat.completions.create(
+        model="gpt-4o",
+        messages=[{
+            "role": "system",
+            "content": f"""Answer based ONLY on these Urantia Book passages. Cite references.
+
+{passages}"""
+        }, {
+            "role": "user",
+            "content": question
+        }],
+        temperature=0.3
+    )
+    return response.choices[0].message.content
+
+print(ask_urantia("What happens after death according to the Urantia Book?"))
+```
+
+## Next Steps
+
+- Add conversation history for multi-turn chat
+- Implement a web UI with React or Next.js
+- Add audio playback for cited passages using the `/audio` endpoint
+- Deploy as a Telegram or Discord bot
+
+<Card title="AI Agent Integration Guide" icon="robot" href="/ai-agents">
+  See the full recommended workflow for AI agent integration.
+</Card>
