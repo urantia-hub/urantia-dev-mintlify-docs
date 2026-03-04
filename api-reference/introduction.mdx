@@ -33,6 +33,19 @@ If you exceed the limit, you'll receive a `429` response:
 
 Wait until `X-RateLimit-Reset` before retrying.
 
+## Caching
+
+All responses include `Cache-Control` headers. Cloudflare's CDN caches responses at the edge using `s-maxage`, so repeated requests are served from the nearest edge node without hitting the origin.
+
+| Route | CDN cache | Browser cache |
+|-------|-----------|---------------|
+| `/toc`, `/papers/*`, `/paragraphs/:ref`, `/audio/*` | 24 hours | 1 hour |
+| `/search` | 1 hour | 5 minutes |
+| `/paragraphs/random` | None | None |
+| `/`, `/docs`, `/openapi.json` | 1 hour | 5 minutes |
+
+Static content (papers, paragraphs, audio) is immutable, so it's cached aggressively. The random endpoint is never cached.
+
 ## Paragraph ID formats
 
 Many endpoints accept paragraph references in three auto-detected formats:
