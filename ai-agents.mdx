@@ -1,0 +1,55 @@
+---
+title: "For AI Agents"
+description: "Recommended patterns for RAG and LLM integration"
+---
+
+The Urantia Papers API is designed for AI agent consumption. Here's the recommended workflow.
+
+## Recommended flow
+
+<Steps>
+  <Step title="Understand the structure">
+    Call `GET /toc` to get the full table of contents — parts, papers, and their titles.
+  </Step>
+  <Step title="Search for relevant passages">
+    Use `POST /search` with the user's query. Results are ranked by relevance.
+  </Step>
+  <Step title="Get surrounding context">
+    For each relevant result, call `GET /paragraphs/:ref/context?window=3` to get paragraphs before and after. This improves comprehension significantly.
+  </Step>
+  <Step title="Read full papers if needed">
+    Use `GET /papers/:id` to read an entire paper when the topic warrants it.
+  </Step>
+</Steps>
+
+## Search tips
+
+The search endpoint supports three modes:
+
+- **`and`** (default) — all words must appear. Best for specific queries.
+- **`or`** — any word can appear. Best for broad exploratory queries.
+- **`phrase`** — exact phrase match. Best when quoting specific text.
+
+You can filter results by `paperId` or `partId` to narrow scope.
+
+```bash
+curl -X POST https://api.urantia.dev/search \
+  -H "Content-Type: application/json" \
+  -d '{"q": "thought adjuster", "type": "and", "limit": 10}'
+```
+
+## Context window
+
+The `/paragraphs/:ref/context` endpoint is particularly useful for RAG. It returns the target paragraph plus surrounding paragraphs (configurable via the `window` parameter, 1-10).
+
+This provides the LLM with the narrative flow around a passage, which leads to more accurate and contextual responses.
+
+## OpenAPI spec
+
+The full OpenAPI 3.1 specification is available at:
+
+```
+https://api.urantia.dev/openapi.json
+```
+
+Use this to auto-generate typed clients in any language.

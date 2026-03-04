@@ -1,33 +1,48 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "API Reference"
+description: "Complete reference for all Urantia Papers API endpoints"
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Base URL
 
-## Welcome
-
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+```
+https://api.urantia.dev
+```
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+No authentication is required. The API is free and open.
+
+## Rate limiting
+
+Requests are rate limited to **100 requests per minute** per IP address. Rate limit headers are included in every response:
+
+| Header | Description |
+|--------|-------------|
+| `X-RateLimit-Limit` | Maximum requests per window (100) |
+| `X-RateLimit-Remaining` | Requests remaining in current window |
+| `X-RateLimit-Reset` | Unix timestamp (seconds) when the window resets |
+
+If you exceed the limit, you'll receive a `429` response:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{
+  "error": "Too many requests, please try again later"
+}
 ```
+
+Wait until `X-RateLimit-Reset` before retrying.
+
+## Paragraph ID formats
+
+Many endpoints accept paragraph references in three auto-detected formats:
+
+| Format | Example | Structure |
+|--------|---------|-----------|
+| globalId | `1:2.0.1` | `partId:paperId.sectionId.paragraphId` |
+| standardReferenceId | `2:0.1` | `paperId:sectionId.paragraphId` |
+| paperSectionParagraphId | `2.0.1` | `paperId.sectionId.paragraphId` |
+
+## Interactive docs
+
+Try endpoints directly in the [Swagger UI](https://api.urantia.dev/docs) or use the interactive examples on each endpoint page below.

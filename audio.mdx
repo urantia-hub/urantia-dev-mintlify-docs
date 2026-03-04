@@ -1,0 +1,51 @@
+---
+title: "Audio"
+description: "Multi-voice audio narration for every paragraph"
+---
+
+Every paragraph includes an `audio` field — a nested object keyed by TTS model and voice, or `null` if no audio exists.
+
+## Response shape
+
+```json
+{
+  "audio": {
+    "tts-1-hd": {
+      "nova": {
+        "format": "mp3",
+        "url": "https://audio.urantia.dev/tts-1-hd-nova-3:119.1.5.mp3"
+      },
+      "echo": {
+        "format": "mp3",
+        "url": "https://audio.urantia.dev/tts-1-hd-echo-3:119.1.5.mp3"
+      }
+    },
+    "tts-1": {
+      "alloy": {
+        "format": "mp3",
+        "url": "https://audio.urantia.dev/tts-1-alloy-3:119.1.5.mp3"
+      }
+    }
+  }
+}
+```
+
+## Available models and voices
+
+Coverage varies per paragraph. The `tts-1-hd` / `nova` combination has full coverage across all 14,500+ paragraphs.
+
+| Model | Voices |
+|-------|--------|
+| `tts-1-hd` | `nova`, `echo`, `onyx`, `alloy`, `fable`, `shimmer` |
+| `tts-1` | `alloy` |
+
+## Accessing audio
+
+Audio URLs are included in responses from all paragraph-returning endpoints: `/search`, `/paragraphs/*`, `/papers/:id`, and the dedicated `/audio/:paragraphId` endpoint.
+
+```bash
+# Get just the audio info for a paragraph
+curl https://api.urantia.dev/audio/119:1.5
+```
+
+All audio files are served from `audio.urantia.dev` via Cloudflare CDN.
