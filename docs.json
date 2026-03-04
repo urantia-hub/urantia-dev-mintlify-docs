@@ -8,22 +8,13 @@
     "dark": "#1D4ED8"
   },
   "favicon": "/favicon.svg",
-  "head": [
-    {
-      "tag": "script",
-      "attributes": {
-        "type": "application/ld+json"
-      },
-      "children": "{\"@context\":\"https://schema.org\",\"@type\":\"WebAPI\",\"name\":\"Urantia Papers API\",\"description\":\"Free, open REST API providing structured access to all 197 papers, 14,500+ paragraphs, full-text search, and audio narration of the Urantia Book.\",\"url\":\"https://api.urantia.dev\",\"documentationUrl\":\"https://urantia.dev\",\"provider\":{\"@type\":\"Organization\",\"name\":\"Urantia.dev\",\"url\":\"https://urantia.dev\"}}"
-    },
-    {
-      "tag": "script",
-      "attributes": {
-        "type": "application/ld+json"
-      },
-      "children": "{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Urantia Papers API\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Any\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"url\":\"https://urantia.dev\",\"description\":\"Free REST API for accessing Urantia Book content including full-text search, structured paragraphs, and audio narration.\"}"
+  "seo": {
+    "indexing": "all",
+    "metatags": {
+      "og:site_name": "Urantia Papers API",
+      "og:type": "website"
     }
-  ],
+  },
   "navigation": {
     "tabs": [
       {
