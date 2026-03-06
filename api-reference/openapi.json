@@ -153,9 +153,6 @@
                                                     "title": {
                                                         "type": "string"
                                                     },
-                                                    "globalId": {
-                                                        "type": "string"
-                                                    },
                                                     "sortId": {
                                                         "type": "string"
                                                     },
@@ -171,7 +168,6 @@
                                                     "id",
                                                     "partId",
                                                     "title",
-                                                    "globalId",
                                                     "sortId",
                                                     "labels"
                                                 ]
@@ -247,9 +243,6 @@
                                                         "title": {
                                                             "type": "string"
                                                         },
-                                                        "globalId": {
-                                                            "type": "string"
-                                                        },
                                                         "sortId": {
                                                             "type": "string"
                                                         },
@@ -265,7 +258,6 @@
                                                         "id",
                                                         "partId",
                                                         "title",
-                                                        "globalId",
                                                         "sortId",
                                                         "labels"
                                                     ]
@@ -278,13 +270,7 @@
                                                             "id": {
                                                                 "type": "string"
                                                             },
-                                                            "globalId": {
-                                                                "type": "string"
-                                                            },
                                                             "standardReferenceId": {
-                                                                "type": "string"
-                                                            },
-                                                            "paperSectionParagraphId": {
                                                                 "type": "string"
                                                             },
                                                             "sortId": {
@@ -308,9 +294,6 @@
                                                                 "nullable": true
                                                             },
                                                             "paragraphId": {
-                                                                "type": "string"
-                                                            },
-                                                            "language": {
                                                                 "type": "string"
                                                             },
                                                             "text": {
@@ -351,9 +334,7 @@
                                                         },
                                                         "required": [
                                                             "id",
-                                                            "globalId",
                                                             "standardReferenceId",
-                                                            "paperSectionParagraphId",
                                                             "sortId",
                                                             "paperId",
                                                             "sectionId",
@@ -361,7 +342,6 @@
                                                             "paperTitle",
                                                             "sectionTitle",
                                                             "paragraphId",
-                                                            "language",
                                                             "text",
                                                             "htmlText",
                                                             "labels",
@@ -552,13 +532,7 @@
                                                 "id": {
                                                     "type": "string"
                                                 },
-                                                "globalId": {
-                                                    "type": "string"
-                                                },
                                                 "standardReferenceId": {
-                                                    "type": "string"
-                                                },
-                                                "paperSectionParagraphId": {
                                                     "type": "string"
                                                 },
                                                 "sortId": {
@@ -582,9 +556,6 @@
                                                     "nullable": true
                                                 },
                                                 "paragraphId": {
-                                                    "type": "string"
-                                                },
-                                                "language": {
                                                     "type": "string"
                                                 },
                                                 "text": {
@@ -625,9 +596,7 @@
                                             },
                                             "required": [
                                                 "id",
-                                                "globalId",
                                                 "standardReferenceId",
-                                                "paperSectionParagraphId",
                                                 "sortId",
                                                 "paperId",
                                                 "sectionId",
@@ -635,7 +604,6 @@
                                                 "paperTitle",
                                                 "sectionTitle",
                                                 "paragraphId",
-                                                "language",
                                                 "text",
                                                 "htmlText",
                                                 "labels",
@@ -703,13 +671,7 @@
                                                 "id": {
                                                     "type": "string"
                                                 },
-                                                "globalId": {
-                                                    "type": "string"
-                                                },
                                                 "standardReferenceId": {
-                                                    "type": "string"
-                                                },
-                                                "paperSectionParagraphId": {
                                                     "type": "string"
                                                 },
                                                 "sortId": {
@@ -733,9 +695,6 @@
                                                     "nullable": true
                                                 },
                                                 "paragraphId": {
-                                                    "type": "string"
-                                                },
-                                                "language": {
                                                     "type": "string"
                                                 },
                                                 "text": {
@@ -776,9 +735,7 @@
                                             },
                                             "required": [
                                                 "id",
-                                                "globalId",
                                                 "standardReferenceId",
-                                                "paperSectionParagraphId",
                                                 "sortId",
                                                 "paperId",
                                                 "sectionId",
@@ -786,7 +743,6 @@
                                                 "paperTitle",
                                                 "sectionTitle",
                                                 "paragraphId",
-                                                "language",
                                                 "text",
                                                 "htmlText",
                                                 "labels",
@@ -904,13 +860,7 @@
                                                         "id": {
                                                             "type": "string"
                                                         },
-                                                        "globalId": {
-                                                            "type": "string"
-                                                        },
                                                         "standardReferenceId": {
-                                                            "type": "string"
-                                                        },
-                                                        "paperSectionParagraphId": {
                                                             "type": "string"
                                                         },
                                                         "sortId": {
@@ -934,9 +884,6 @@
                                                             "nullable": true
                                                         },
                                                         "paragraphId": {
-                                                            "type": "string"
-                                                        },
-                                                        "language": {
                                                             "type": "string"
                                                         },
                                                         "text": {
@@ -977,9 +924,7 @@
                                                     },
                                                     "required": [
                                                         "id",
-                                                        "globalId",
                                                         "standardReferenceId",
-                                                        "paperSectionParagraphId",
                                                         "sortId",
                                                         "paperId",
                                                         "sectionId",
@@ -987,7 +932,6 @@
                                                         "paperTitle",
                                                         "sectionTitle",
                                                         "paragraphId",
-                                                        "language",
                                                         "text",
                                                         "htmlText",
                                                         "labels",
@@ -1002,13 +946,7 @@
                                                             "id": {
                                                                 "type": "string"
                                                             },
-                                                            "globalId": {
-                                                                "type": "string"
-                                                            },
                                                             "standardReferenceId": {
-                                                                "type": "string"
-                                                            },
-                                                            "paperSectionParagraphId": {
                                                                 "type": "string"
                                                             },
                                                             "sortId": {
@@ -1032,9 +970,6 @@
                                                                 "nullable": true
                                                             },
                                                             "paragraphId": {
-                                                                "type": "string"
-                                                            },
-                                                            "language": {
                                                                 "type": "string"
                                                             },
                                                             "text": {
@@ -1075,9 +1010,7 @@
                                                         },
                                                         "required": [
                                                             "id",
-                                                            "globalId",
                                                             "standardReferenceId",
-                                                            "paperSectionParagraphId",
                                                             "sortId",
                                                             "paperId",
                                                             "sectionId",
@@ -1085,7 +1018,6 @@
                                                             "paperTitle",
                                                             "sectionTitle",
                                                             "paragraphId",
-                                                            "language",
                                                             "text",
                                                             "htmlText",
                                                             "labels",
@@ -1101,13 +1033,7 @@
                                                             "id": {
                                                                 "type": "string"
                                                             },
-                                                            "globalId": {
-                                                                "type": "string"
-                                                            },
                                                             "standardReferenceId": {
-                                                                "type": "string"
-                                                            },
-                                                            "paperSectionParagraphId": {
                                                                 "type": "string"
                                                             },
                                                             "sortId": {
@@ -1131,9 +1057,6 @@
                                                                 "nullable": true
                                                             },
                                                             "paragraphId": {
-                                                                "type": "string"
-                                                            },
-                                                            "language": {
                                                                 "type": "string"
                                                             },
                                                             "text": {
@@ -1174,9 +1097,7 @@
                                                         },
                                                         "required": [
                                                             "id",
-                                                            "globalId",
                                                             "standardReferenceId",
-                                                            "paperSectionParagraphId",
                                                             "sortId",
                                                             "paperId",
                                                             "sectionId",
@@ -1184,7 +1105,6 @@
                                                             "paperTitle",
                                                             "sectionTitle",
                                                             "paragraphId",
-                                                            "language",
                                                             "text",
                                                             "htmlText",
                                                             "labels",
@@ -1333,13 +1253,7 @@
                                                     "id": {
                                                         "type": "string"
                                                     },
-                                                    "globalId": {
-                                                        "type": "string"
-                                                    },
                                                     "standardReferenceId": {
-                                                        "type": "string"
-                                                    },
-                                                    "paperSectionParagraphId": {
                                                         "type": "string"
                                                     },
                                                     "sortId": {
@@ -1363,9 +1277,6 @@
                                                         "nullable": true
                                                     },
                                                     "paragraphId": {
-                                                        "type": "string"
-                                                    },
-                                                    "language": {
                                                         "type": "string"
                                                     },
                                                     "text": {
@@ -1409,9 +1320,7 @@
                                                 },
                                                 "required": [
                                                     "id",
-                                                    "globalId",
                                                     "standardReferenceId",
-                                                    "paperSectionParagraphId",
                                                     "sortId",
                                                     "paperId",
                                                     "sectionId",
@@ -1419,7 +1328,6 @@
                                                     "paperTitle",
                                                     "sectionTitle",
                                                     "paragraphId",
-                                                    "language",
                                                     "text",
                                                     "htmlText",
                                                     "labels",
@@ -1559,13 +1467,7 @@
                                                     "id": {
                                                         "type": "string"
                                                     },
-                                                    "globalId": {
-                                                        "type": "string"
-                                                    },
                                                     "standardReferenceId": {
-                                                        "type": "string"
-                                                    },
-                                                    "paperSectionParagraphId": {
                                                         "type": "string"
                                                     },
                                                     "sortId": {
@@ -1589,9 +1491,6 @@
                                                         "nullable": true
                                                     },
                                                     "paragraphId": {
-                                                        "type": "string"
-                                                    },
-                                                    "language": {
                                                         "type": "string"
                                                     },
                                                     "text": {
@@ -1635,9 +1534,7 @@
                                                 },
                                                 "required": [
                                                     "id",
-                                                    "globalId",
                                                     "standardReferenceId",
-                                                    "paperSectionParagraphId",
                                                     "sortId",
                                                     "paperId",
                                                     "sectionId",
@@ -1645,7 +1542,6 @@
                                                     "paperTitle",
                                                     "sectionTitle",
                                                     "paragraphId",
-                                                    "language",
                                                     "text",
                                                     "htmlText",
                                                     "labels",
