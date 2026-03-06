@@ -63,7 +63,10 @@
           },
           {
             "group": "Search",
-            "pages": ["api-reference/endpoint/search"]
+            "pages": [
+              "api-reference/endpoint/search",
+              "api-reference/endpoint/semantic-search"
+            ]
           },
           {
             "group": "Audio",

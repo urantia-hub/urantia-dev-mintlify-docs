@@ -35,6 +35,10 @@ No authentication required. Free and open access.
 - POST /search — Full-text search across all paragraphs
   - Body: {"q": "search terms", "type": "and|or|phrase", "limit": 10}
   - Filters: paperId, partId
+- POST /search/semantic — Semantic similarity search using vector embeddings
+  - Body: {"q": "natural language query", "limit": 10}
+  - Filters: paperId, partId
+  - Returns results ranked by similarity score (0-1), finds conceptually related passages even without exact keyword matches
 
 ### Audio
 - GET /audio/:paragraphId — Get audio URLs for a paragraph

@@ -13,7 +13,7 @@ The Urantia Papers API is designed for AI agent consumption. Here's the recommen
     Call `GET /toc` to get the full table of contents — parts, papers, and their titles.
   </Step>
   <Step title="Search for relevant passages">
-    Use `POST /search` with the user's query. Results are ranked by relevance.
+    Use `POST /search` for keyword matching, or `POST /search/semantic` for meaning-based similarity search. Semantic search finds conceptually related passages even without exact keyword matches — ideal for natural language queries from users.
   </Step>
   <Step title="Get surrounding context">
     For each relevant result, call `GET /paragraphs/:ref/context?window=3` to get paragraphs before and after. This improves comprehension significantly.
@@ -25,19 +25,31 @@ The Urantia Papers API is designed for AI agent consumption. Here's the recommen
 
 ## Search tips
 
-The search endpoint supports three modes:
+### Full-text search (`POST /search`)
+
+Best for keyword-based queries. Supports three modes:
 
 - **`and`** (default) — all words must appear. Best for specific queries.
 - **`or`** — any word can appear. Best for broad exploratory queries.
 - **`phrase`** — exact phrase match. Best when quoting specific text.
-
-You can filter results by `paperId` or `partId` to narrow scope.
 
 ```bash
 curl -X POST https://api.urantia.dev/search \
   -H "Content-Type: application/json" \
   -d '{"q": "thought adjuster", "type": "and", "limit": 10}'
 ```
+
+### Semantic search (`POST /search/semantic`)
+
+Best for natural language queries. Uses vector embeddings to find conceptually similar passages, even when the exact words don't match. Returns results ranked by `similarity` (0-1).
+
+```bash
+curl -X POST https://api.urantia.dev/search/semantic \
+  -H "Content-Type: application/json" \
+  -d '{"q": "what happens after death", "limit": 10}'
+```
+
+Both search endpoints support `paperId` and `partId` filters to narrow scope.
 
 ## Context window
 
