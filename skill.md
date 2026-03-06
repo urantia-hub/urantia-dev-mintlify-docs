@@ -41,6 +41,7 @@ No authentication required. Rate limit: 100 requests/minute per IP.
 | GET | `/paragraphs/:ref` | Paragraph by any ID format |
 | GET | `/paragraphs/:ref/context?window=3` | Paragraph with surrounding context (window: 1-10) |
 | POST | `/search` | Full-text search with pagination |
+| POST | `/search/semantic` | Semantic similarity search using vector embeddings |
 | GET | `/audio/:paragraphId` | Audio URLs for a paragraph |
 
 ## Paragraph Reference Formats
