@@ -30,7 +30,7 @@
           },
           {
             "group": "More",
-            "pages": ["use-cases"]
+            "pages": ["use-cases", "changelog"]
           }
         ]
       },
@@ -165,6 +165,11 @@
           "anchor": "Read the Papers",
           "href": "https://urantiahub.com",
           "icon": "book-open"
+        },
+        {
+          "anchor": "Status",
+          "href": "https://status.urantia.dev",
+          "icon": "signal"
         }
       ]
     }

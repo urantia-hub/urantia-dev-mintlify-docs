@@ -1,0 +1,23 @@
+---
+title: "Changelog"
+description: "What's new in the Urantia Papers API"
+---
+
+# Changelog
+
+All notable changes to the Urantia Papers API are documented here.
+
+## March 2026
+
+### Added
+
+- **Health check endpoint** — `GET /health` verifies database connectivity and returns `{ status, db, timestamp }`. Returns 503 if the database is unreachable.
+- **Structured logging** — All requests are logged as structured JSON events via BetterStack, including method, path, status, duration, IP, and user agent.
+- **Error tracking** — Unhandled errors are captured with full stack traces and request context, sent to BetterStack for alerting and debugging.
+- **Search analytics** — Full-text and semantic search queries are logged with query text, search type, filters, and result count for usage insights.
+- **Uptime monitoring** — BetterStack uptime monitor on `/health` with incident alerting.
+- **This changelog page**
+
+### Improved
+
+- **Response compression** — Verified gzip/brotli compression is active at the Cloudflare edge for all JSON responses.
