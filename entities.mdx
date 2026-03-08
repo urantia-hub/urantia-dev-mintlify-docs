@@ -1,0 +1,99 @@
+---
+title: "Entities API - Beings, Places & Concepts in the Urantia Book"
+sidebarTitle: "Entities"
+description: "Browse 4,400+ named entities from the Urantia Book — beings, places, orders, races, religions, and concepts — with descriptions, aliases, and paragraph citations."
+---
+
+The API includes a catalog of 4,400+ named entities extracted from the [Urantiapedia](https://urantiapedia.org) knowledge graph, built by [Jan Herca](https://github.com/JanHerca). Each entity is classified by type and linked to every paragraph where it appears.
+
+## Entity types
+
+| Type | Description | Examples |
+|------|-------------|----------|
+| `being` | Named individuals and personalities | Adam and Eve, Michael of Nebadon, Machiventa Melchizedek |
+| `place` | Locations and geographic regions | Jerusem, Havona, Garden of Eden |
+| `order` | Orders and classes of beings | Seraphim, Midwayers, Thought Adjusters |
+| `race` | Races and peoples | Andites, Nodites, Sangik races |
+| `religion` | Religious traditions and movements | Christianity, Buddhism, Salem teachings |
+| `concept` | Ideas, doctrines, and abstract topics | Morontia, Supreme Being, personality survival |
+
+## Entity shape
+
+```json
+{
+  "id": "adam-and-eve",
+  "name": "Adam and Eve",
+  "type": "being",
+  "aliases": ["Material Son and Daughter", "Adam", "Eve"],
+  "description": "The Material Son and Daughter who came to Urantia as biologic uplifters...",
+  "seeAlso": ["garden-of-eden", "default-of-adam-and-eve"],
+  "citationCount": 42
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `id` | URL-friendly slug, used as the entity identifier |
+| `name` | Display name |
+| `type` | One of: `being`, `place`, `order`, `race`, `religion`, `concept` |
+| `aliases` | Alternative names (nullable) |
+| `description` | Brief description from Urantiapedia (nullable) |
+| `seeAlso` | Related entity IDs (nullable) |
+| `citationCount` | Number of paragraphs that mention this entity |
+
+## Browsing entities
+
+```bash
+# List all entities (paginated)
+curl "https://api.urantia.dev/entities?limit=20"
+
+# Filter by type
+curl "https://api.urantia.dev/entities?type=being&limit=10"
+
+# Search by name
+curl "https://api.urantia.dev/entities?q=melchizedek"
+
+# Combine filters
+curl "https://api.urantia.dev/entities?type=place&q=eden"
+```
+
+## Getting a single entity
+
+```bash
+curl https://api.urantia.dev/entities/adam-and-eve
+```
+
+Returns 404 if the entity ID doesn't exist.
+
+## Finding paragraphs for an entity
+
+```bash
+curl "https://api.urantia.dev/entities/adam-and-eve/paragraphs?limit=5"
+```
+
+Returns a paginated list of paragraphs that mention the entity, ordered by position in the text.
+
+## Inline entities on paragraphs
+
+You can also include entity mentions directly on paragraph responses using `?include=entities`:
+
+```bash
+curl "https://api.urantia.dev/paragraphs/74:1.1?include=entities"
+```
+
+This adds an `entities` array to each paragraph with the `id`, `name`, and `type` of every entity mentioned:
+
+```json
+{
+  "data": {
+    "id": "2:74.1.1",
+    "text": "Adam and Eve arrived on Urantia...",
+    "entities": [
+      { "id": "adam-and-eve", "name": "Adam and Eve", "type": "being" },
+      { "id": "urantia", "name": "Urantia", "type": "place" }
+    ]
+  }
+}
+```
+
+Works on all paragraph-returning endpoints: `/paragraphs/*`, `/papers/:id`, `/search`, and `/search/semantic`. For search endpoints, pass `"include": "entities"` in the request body.
