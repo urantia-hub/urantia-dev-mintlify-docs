@@ -1,1088 +1,2546 @@
 {
-    "openapi": "3.1.0",
-    "info": {
-        "title": "Urantia Papers API",
-        "version": "1.0.0",
-        "description": "A developer and AI-agent friendly API for the Urantia Papers. Provides full-text search, structured content access, and audio URLs for all 17,000+ paragraphs across 197 papers."
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Urantia Papers API",
+    "version": "1.0.0",
+    "description": "A developer and AI-agent friendly API for the Urantia Papers. Provides full-text search, structured content access, and audio URLs for all 17,000+ paragraphs across 197 papers."
+  },
+  "servers": [
+    {
+      "url": "https://api.urantia.dev",
+      "description": "Production"
     },
-    "servers": [
-        {
-            "url": "https://api.urantia.dev",
-            "description": "Production"
-        },
-        {
-            "url": "http://localhost:3000",
-            "description": "Local development"
-        }
-    ],
-    "components": {
-        "schemas": {},
-        "parameters": {}
-    },
-    "paths": {
-        "/toc": {
-            "get": {
-                "operationId": "getToc",
-                "tags": ["Table of Contents"],
-                "summary": "Get the full table of contents",
-                "description": "Returns the complete table of contents with parts and their papers. This is typically the first endpoint an AI agent should call to understand the book structure.",
-                "responses": {
-                    "200": {
-                        "description": "Table of contents",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object",
-                                            "properties": {
-                                                "parts": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "id": { "type": "string" },
-                                                            "title": { "type": "string" },
-                                                            "sponsorship": { "type": "string", "nullable": true },
-                                                            "papers": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "type": "object",
-                                                                    "properties": {
-                                                                        "id": { "type": "string" },
-                                                                        "title": { "type": "string" },
-                                                                        "labels": { "type": "array", "nullable": true, "items": { "type": "string" } }
-                                                                    },
-                                                                    "required": ["id", "title", "labels"]
-                                                                }
-                                                            }
-                                                        },
-                                                        "required": ["id", "title", "sponsorship", "papers"]
-                                                    }
-                                                }
-                                            },
-                                            "required": ["parts"]
-                                        }
-                                    },
-                                    "required": ["data"]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/papers": {
-            "get": {
-                "operationId": "listPapers",
-                "tags": ["Papers"],
-                "summary": "List all 197 papers",
-                "description": "Returns metadata for all papers in the Urantia Book, ordered by paper number.",
-                "responses": {
-                    "200": {
-                        "description": "List of all papers",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "id": { "type": "string" },
-                                                    "partId": { "type": "string" },
-                                                    "title": { "type": "string" },
-                                                    "sortId": { "type": "string" },
-                                                    "labels": { "type": "array", "nullable": true, "items": { "type": "string" } }
-                                                },
-                                                "required": ["id", "partId", "title", "sortId", "labels"]
-                                            }
-                                        }
-                                    },
-                                    "required": ["data"]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/papers/{id}": {
-            "get": {
-                "operationId": "getPaper",
-                "tags": ["Papers"],
-                "summary": "Get a paper with all its paragraphs",
-                "description": "Returns a single paper's metadata along with all its paragraphs in order. Paper IDs range from 0 (Foreword) to 196.\n\nUse `?include=entities` to include typed entity mentions in each paragraph.",
-                "parameters": [
-                    { "schema": { "type": "string" }, "required": true, "name": "id", "in": "path" },
-                    { "schema": { "type": "string" }, "required": false, "name": "include", "in": "query" }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Paper with paragraphs",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object",
-                                            "properties": {
-                                                "paper": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "id": { "type": "string" },
-                                                        "partId": { "type": "string" },
-                                                        "title": { "type": "string" },
-                                                        "sortId": { "type": "string" },
-                                                        "labels": { "type": "array", "nullable": true, "items": { "type": "string" } }
-                                                    },
-                                                    "required": ["id", "partId", "title", "sortId", "labels"]
-                                                },
-                                                "paragraphs": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "id": { "type": "string" },
-                                                            "standardReferenceId": { "type": "string" },
-                                                            "sortId": { "type": "string" },
-                                                            "paperId": { "type": "string" },
-                                                            "sectionId": { "type": "string", "nullable": true },
-                                                            "partId": { "type": "string" },
-                                                            "paperTitle": { "type": "string" },
-                                                            "sectionTitle": { "type": "string", "nullable": true },
-                                                            "paragraphId": { "type": "string" },
-                                                            "text": { "type": "string" },
-                                                            "htmlText": { "type": "string" },
-                                                            "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
-                                                            "audio": {
-                                                                "type": "object",
-                                                                "nullable": true,
-                                                                "additionalProperties": {
-                                                                    "type": "object",
-                                                                    "additionalProperties": {
-                                                                        "type": "object",
-                                                                        "properties": {
-                                                                            "format": { "type": "string" },
-                                                                            "url": { "type": "string" }
-                                                                        },
-                                                                        "required": ["format", "url"]
-                                                                    }
-                                                                }
-                                                            },
-                                                            "entities": {
-                                                                "type": "array",
-                                                                "nullable": true,
-                                                                "items": {
-                                                                    "type": "object",
-                                                                    "properties": {
-                                                                        "id": { "type": "string" },
-                                                                        "name": { "type": "string" },
-                                                                        "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
-                                                                    },
-                                                                    "required": ["id", "name", "type"]
-                                                                }
-                                                            }
-                                                        },
-                                                        "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
-                                                    }
-                                                }
-                                            },
-                                            "required": ["paper", "paragraphs"]
-                                        }
-                                    },
-                                    "required": ["data"]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Paper not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/papers/{id}/sections": {
-            "get": {
-                "operationId": "getPaperSections",
-                "tags": ["Papers"],
-                "summary": "Get sections within a paper",
-                "description": "Returns all sections for a given paper, ordered by section number.",
-                "parameters": [
-                    { "schema": { "type": "string" }, "required": true, "name": "id", "in": "path" }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "List of sections",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "id": { "type": "string" },
-                                                    "paperId": { "type": "string" },
-                                                    "sectionId": { "type": "string" },
-                                                    "title": { "type": "string", "nullable": true },
-                                                    "globalId": { "type": "string" },
-                                                    "sortId": { "type": "string" }
-                                                },
-                                                "required": ["id", "paperId", "sectionId", "title", "globalId", "sortId"]
-                                            }
-                                        }
-                                    },
-                                    "required": ["data"]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Paper not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/paragraphs/random": {
-            "get": {
-                "operationId": "getRandomParagraph",
-                "tags": ["Paragraphs"],
-                "summary": "Get a random paragraph",
-                "description": "Returns a single random paragraph from the Urantia Book. Useful for daily quotes or exploration.\n\nUse `?include=entities` to include typed entity mentions (beings, places, orders, races, religions, concepts) in the response.",
-                "parameters": [
-                    { "schema": { "type": "string" }, "required": false, "name": "include", "in": "query" }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "A random paragraph",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object",
-                                            "properties": {
-                                                "id": { "type": "string" },
-                                                "standardReferenceId": { "type": "string" },
-                                                "sortId": { "type": "string" },
-                                                "paperId": { "type": "string" },
-                                                "sectionId": { "type": "string", "nullable": true },
-                                                "partId": { "type": "string" },
-                                                "paperTitle": { "type": "string" },
-                                                "sectionTitle": { "type": "string", "nullable": true },
-                                                "paragraphId": { "type": "string" },
-                                                "text": { "type": "string" },
-                                                "htmlText": { "type": "string" },
-                                                "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
-                                                "audio": {
-                                                    "type": "object",
-                                                    "nullable": true,
-                                                    "additionalProperties": {
-                                                        "type": "object",
-                                                        "additionalProperties": {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "format": { "type": "string" },
-                                                                "url": { "type": "string" }
-                                                            },
-                                                            "required": ["format", "url"]
-                                                        }
-                                                    }
-                                                },
-                                                "entities": {
-                                                    "type": "array",
-                                                    "nullable": true,
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "id": { "type": "string" },
-                                                            "name": { "type": "string" },
-                                                            "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
-                                                        },
-                                                        "required": ["id", "name", "type"]
-                                                    }
-                                                }
-                                            },
-                                            "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
-                                        }
-                                    },
-                                    "required": ["data"]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/paragraphs/{ref}": {
-            "get": {
-                "operationId": "getParagraph",
-                "tags": ["Paragraphs"],
-                "summary": "Get a paragraph by reference",
-                "description": "Look up a paragraph using any of three ID formats:\n- **globalId**: \"1:2.0.1\" (partId:paperId.sectionId.paragraphId)\n- **standardReferenceId**: \"2:0.1\" (paperId:sectionId.paragraphId)\n- **paperSectionParagraphId**: \"2.0.1\" (paperId.sectionId.paragraphId)\n\nThe format is auto-detected from the reference string.\n\nUse `?include=entities` to include typed entity mentions in the response.",
-                "parameters": [
-                    { "schema": { "type": "string" }, "required": true, "name": "ref", "in": "path" },
-                    { "schema": { "type": "string" }, "required": false, "name": "include", "in": "query" }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "The paragraph",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object",
-                                            "properties": {
-                                                "id": { "type": "string" },
-                                                "standardReferenceId": { "type": "string" },
-                                                "sortId": { "type": "string" },
-                                                "paperId": { "type": "string" },
-                                                "sectionId": { "type": "string", "nullable": true },
-                                                "partId": { "type": "string" },
-                                                "paperTitle": { "type": "string" },
-                                                "sectionTitle": { "type": "string", "nullable": true },
-                                                "paragraphId": { "type": "string" },
-                                                "text": { "type": "string" },
-                                                "htmlText": { "type": "string" },
-                                                "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
-                                                "audio": {
-                                                    "type": "object",
-                                                    "nullable": true,
-                                                    "additionalProperties": {
-                                                        "type": "object",
-                                                        "additionalProperties": {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "format": { "type": "string" },
-                                                                "url": { "type": "string" }
-                                                            },
-                                                            "required": ["format", "url"]
-                                                        }
-                                                    }
-                                                },
-                                                "entities": {
-                                                    "type": "array",
-                                                    "nullable": true,
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "id": { "type": "string" },
-                                                            "name": { "type": "string" },
-                                                            "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
-                                                        },
-                                                        "required": ["id", "name", "type"]
-                                                    }
-                                                }
-                                            },
-                                            "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
-                                        }
-                                    },
-                                    "required": ["data"]
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid reference format",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Paragraph not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/paragraphs/{ref}/context": {
-            "get": {
-                "operationId": "getParagraphContext",
-                "tags": ["Paragraphs"],
-                "summary": "Get a paragraph with surrounding context",
-                "description": "Returns the target paragraph along with N paragraphs before and after it (ordered by sort_id).\nUseful for AI agents doing RAG that need surrounding context for better understanding.\nThe `window` query parameter controls how many paragraphs before/after to include (default: 2, max: 10).\n\nUse `?include=entities` to include typed entity mentions in the response.",
-                "parameters": [
-                    { "schema": { "type": "string" }, "required": true, "name": "ref", "in": "path" },
-                    { "schema": { "type": "integer", "minimum": 1, "maximum": 10, "default": 2 }, "required": false, "name": "window", "in": "query" },
-                    { "schema": { "type": "string" }, "required": false, "name": "include", "in": "query" }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Paragraph with context",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object",
-                                            "properties": {
-                                                "target": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "id": { "type": "string" },
-                                                        "standardReferenceId": { "type": "string" },
-                                                        "sortId": { "type": "string" },
-                                                        "paperId": { "type": "string" },
-                                                        "sectionId": { "type": "string", "nullable": true },
-                                                        "partId": { "type": "string" },
-                                                        "paperTitle": { "type": "string" },
-                                                        "sectionTitle": { "type": "string", "nullable": true },
-                                                        "paragraphId": { "type": "string" },
-                                                        "text": { "type": "string" },
-                                                        "htmlText": { "type": "string" },
-                                                        "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
-                                                        "audio": {
-                                                            "type": "object",
-                                                            "nullable": true,
-                                                            "additionalProperties": {
-                                                                "type": "object",
-                                                                "additionalProperties": {
-                                                                    "type": "object",
-                                                                    "properties": {
-                                                                        "format": { "type": "string" },
-                                                                        "url": { "type": "string" }
-                                                                    },
-                                                                    "required": ["format", "url"]
-                                                                }
-                                                            }
-                                                        },
-                                                        "entities": {
-                                                            "type": "array",
-                                                            "nullable": true,
-                                                            "items": {
-                                                                "type": "object",
-                                                                "properties": {
-                                                                    "id": { "type": "string" },
-                                                                    "name": { "type": "string" },
-                                                                    "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
-                                                                },
-                                                                "required": ["id", "name", "type"]
-                                                            }
-                                                        }
-                                                    },
-                                                    "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
-                                                },
-                                                "before": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "id": { "type": "string" },
-                                                            "standardReferenceId": { "type": "string" },
-                                                            "sortId": { "type": "string" },
-                                                            "paperId": { "type": "string" },
-                                                            "sectionId": { "type": "string", "nullable": true },
-                                                            "partId": { "type": "string" },
-                                                            "paperTitle": { "type": "string" },
-                                                            "sectionTitle": { "type": "string", "nullable": true },
-                                                            "paragraphId": { "type": "string" },
-                                                            "text": { "type": "string" },
-                                                            "htmlText": { "type": "string" },
-                                                            "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
-                                                            "audio": {
-                                                                "type": "object",
-                                                                "nullable": true,
-                                                                "additionalProperties": {
-                                                                    "type": "object",
-                                                                    "additionalProperties": {
-                                                                        "type": "object",
-                                                                        "properties": {
-                                                                            "format": { "type": "string" },
-                                                                            "url": { "type": "string" }
-                                                                        },
-                                                                        "required": ["format", "url"]
-                                                                    }
-                                                                }
-                                                            },
-                                                            "entities": {
-                                                                "type": "array",
-                                                                "nullable": true,
-                                                                "items": {
-                                                                    "type": "object",
-                                                                    "properties": {
-                                                                        "id": { "type": "string" },
-                                                                        "name": { "type": "string" },
-                                                                        "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
-                                                                    },
-                                                                    "required": ["id", "name", "type"]
-                                                                }
-                                                            }
-                                                        },
-                                                        "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
-                                                    }
-                                                },
-                                                "after": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "id": { "type": "string" },
-                                                            "standardReferenceId": { "type": "string" },
-                                                            "sortId": { "type": "string" },
-                                                            "paperId": { "type": "string" },
-                                                            "sectionId": { "type": "string", "nullable": true },
-                                                            "partId": { "type": "string" },
-                                                            "paperTitle": { "type": "string" },
-                                                            "sectionTitle": { "type": "string", "nullable": true },
-                                                            "paragraphId": { "type": "string" },
-                                                            "text": { "type": "string" },
-                                                            "htmlText": { "type": "string" },
-                                                            "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
-                                                            "audio": {
-                                                                "type": "object",
-                                                                "nullable": true,
-                                                                "additionalProperties": {
-                                                                    "type": "object",
-                                                                    "additionalProperties": {
-                                                                        "type": "object",
-                                                                        "properties": {
-                                                                            "format": { "type": "string" },
-                                                                            "url": { "type": "string" }
-                                                                        },
-                                                                        "required": ["format", "url"]
-                                                                    }
-                                                                }
-                                                            },
-                                                            "entities": {
-                                                                "type": "array",
-                                                                "nullable": true,
-                                                                "items": {
-                                                                    "type": "object",
-                                                                    "properties": {
-                                                                        "id": { "type": "string" },
-                                                                        "name": { "type": "string" },
-                                                                        "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
-                                                                    },
-                                                                    "required": ["id", "name", "type"]
-                                                                }
-                                                            }
-                                                        },
-                                                        "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
-                                                    }
-                                                }
-                                            },
-                                            "required": ["target", "before", "after"]
-                                        }
-                                    },
-                                    "required": ["data"]
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid reference format",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Paragraph not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/search": {
-            "post": {
-                "operationId": "search",
-                "tags": ["Search"],
-                "summary": "Full-text search across all paragraphs",
-                "description": "Search the Urantia Papers using full-text search. Supports three search modes:\n- **and**: All words must appear (default)\n- **or**: Any word can appear\n- **phrase**: Exact phrase match\n\nResults are ranked by relevance. Optional filters: paperId, partId.",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "q": { "type": "string", "minLength": 1, "maxLength": 500 },
-                                    "page": { "type": "integer", "minimum": 0, "default": 0 },
-                                    "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 },
-                                    "paperId": { "type": "string" },
-                                    "partId": { "type": "string" },
-                                    "type": { "type": "string", "enum": ["phrase", "and", "or"], "default": "and" },
-                                    "include": { "type": "string" }
-                                },
-                                "required": ["q"]
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Search results with pagination",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "id": { "type": "string" },
-                                                    "standardReferenceId": { "type": "string" },
-                                                    "sortId": { "type": "string" },
-                                                    "paperId": { "type": "string" },
-                                                    "sectionId": { "type": "string", "nullable": true },
-                                                    "partId": { "type": "string" },
-                                                    "paperTitle": { "type": "string" },
-                                                    "sectionTitle": { "type": "string", "nullable": true },
-                                                    "paragraphId": { "type": "string" },
-                                                    "text": { "type": "string" },
-                                                    "htmlText": { "type": "string" },
-                                                    "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
-                                                    "audio": {
-                                                        "type": "object",
-                                                        "nullable": true,
-                                                        "additionalProperties": {
-                                                            "type": "object",
-                                                            "additionalProperties": {
-                                                                "type": "object",
-                                                                "properties": {
-                                                                    "format": { "type": "string" },
-                                                                    "url": { "type": "string" }
-                                                                },
-                                                                "required": ["format", "url"]
-                                                            }
-                                                        }
-                                                    },
-                                                    "entities": {
-                                                        "type": "array",
-                                                        "nullable": true,
-                                                        "items": {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "id": { "type": "string" },
-                                                                "name": { "type": "string" },
-                                                                "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
-                                                            },
-                                                            "required": ["id", "name", "type"]
-                                                        }
-                                                    },
-                                                    "rank": { "type": "number" }
-                                                },
-                                                "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio", "rank"]
-                                            }
-                                        },
-                                        "meta": {
-                                            "type": "object",
-                                            "properties": {
-                                                "page": { "type": "integer" },
-                                                "limit": { "type": "integer" },
-                                                "total": { "type": "integer" },
-                                                "totalPages": { "type": "integer" }
-                                            },
-                                            "required": ["page", "limit", "total", "totalPages"]
-                                        }
-                                    },
-                                    "required": ["data", "meta"]
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid search query",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/search/semantic": {
-            "post": {
-                "operationId": "semanticSearch",
-                "tags": ["Search"],
-                "summary": "Semantic similarity search across all paragraphs",
-                "description": "Search the Urantia Papers using semantic similarity (vector embeddings).\nReturns conceptually related results even without exact keyword matches.\nOptional filters: paperId, partId.",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "q": { "type": "string", "minLength": 1, "maxLength": 500 },
-                                    "page": { "type": "integer", "minimum": 0, "default": 0 },
-                                    "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 },
-                                    "paperId": { "type": "string" },
-                                    "partId": { "type": "string" },
-                                    "include": { "type": "string" }
-                                },
-                                "required": ["q"]
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Semantic search results with pagination",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "id": { "type": "string" },
-                                                    "standardReferenceId": { "type": "string" },
-                                                    "sortId": { "type": "string" },
-                                                    "paperId": { "type": "string" },
-                                                    "sectionId": { "type": "string", "nullable": true },
-                                                    "partId": { "type": "string" },
-                                                    "paperTitle": { "type": "string" },
-                                                    "sectionTitle": { "type": "string", "nullable": true },
-                                                    "paragraphId": { "type": "string" },
-                                                    "text": { "type": "string" },
-                                                    "htmlText": { "type": "string" },
-                                                    "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
-                                                    "audio": {
-                                                        "type": "object",
-                                                        "nullable": true,
-                                                        "additionalProperties": {
-                                                            "type": "object",
-                                                            "additionalProperties": {
-                                                                "type": "object",
-                                                                "properties": {
-                                                                    "format": { "type": "string" },
-                                                                    "url": { "type": "string" }
-                                                                },
-                                                                "required": ["format", "url"]
-                                                            }
-                                                        }
-                                                    },
-                                                    "entities": {
-                                                        "type": "array",
-                                                        "nullable": true,
-                                                        "items": {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "id": { "type": "string" },
-                                                                "name": { "type": "string" },
-                                                                "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
-                                                            },
-                                                            "required": ["id", "name", "type"]
-                                                        }
-                                                    },
-                                                    "similarity": { "type": "number" }
-                                                },
-                                                "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio", "similarity"]
-                                            }
-                                        },
-                                        "meta": {
-                                            "type": "object",
-                                            "properties": {
-                                                "page": { "type": "integer" },
-                                                "limit": { "type": "integer" },
-                                                "total": { "type": "integer" },
-                                                "totalPages": { "type": "integer" }
-                                            },
-                                            "required": ["page", "limit", "total", "totalPages"]
-                                        }
-                                    },
-                                    "required": ["data", "meta"]
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid search query",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/audio/{paragraphId}": {
-            "get": {
-                "operationId": "getAudio",
-                "tags": ["Audio"],
-                "summary": "Get audio URL for a paragraph",
-                "description": "Returns the audio file URL for a given paragraph. Accepts any paragraph reference format (globalId, standardReferenceId, or paperSectionParagraphId).",
-                "parameters": [
-                    { "schema": { "type": "string" }, "required": true, "name": "paragraphId", "in": "path" }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Audio information",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object",
-                                            "properties": {
-                                                "paragraphId": { "type": "string" },
-                                                "audio": {
-                                                    "type": "object",
-                                                    "nullable": true,
-                                                    "additionalProperties": {
-                                                        "type": "object",
-                                                        "additionalProperties": {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "format": { "type": "string" },
-                                                                "url": { "type": "string" }
-                                                            },
-                                                            "required": ["format", "url"]
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "required": ["paragraphId", "audio"]
-                                        }
-                                    },
-                                    "required": ["data"]
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Paragraph not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": { "type": "string" }
-                                    },
-                                    "required": ["error"]
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development"
     }
+  ],
+  "components": {
+    "schemas": {},
+    "parameters": {}
+  },
+  "paths": {
+    "/toc": {
+      "get": {
+        "operationId": "getToc",
+        "tags": [
+          "Table of Contents"
+        ],
+        "summary": "Get the full table of contents",
+        "description": "Returns the complete table of contents with parts and their papers. This is typically the first endpoint an AI agent should call to understand the book structure.",
+        "responses": {
+          "200": {
+            "description": "Table of contents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "parts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "sponsorship": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "papers": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    },
+                                    "labels": {
+                                      "type": "array",
+                                      "nullable": true,
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "title",
+                                    "labels"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "title",
+                              "sponsorship",
+                              "papers"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "parts"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/papers": {
+      "get": {
+        "operationId": "listPapers",
+        "tags": [
+          "Papers"
+        ],
+        "summary": "List all 197 papers",
+        "description": "Returns metadata for all papers in the Urantia Book, ordered by paper number.",
+        "responses": {
+          "200": {
+            "description": "List of all papers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "partId": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "sortId": {
+                            "type": "string"
+                          },
+                          "labels": {
+                            "type": "array",
+                            "nullable": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "partId",
+                          "title",
+                          "sortId",
+                          "labels"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/papers/{id}": {
+      "get": {
+        "operationId": "getPaper",
+        "tags": [
+          "Papers"
+        ],
+        "summary": "Get a paper with all its paragraphs",
+        "description": "Returns a single paper's metadata along with all its paragraphs in order. Paper IDs range from 0 (Foreword) to 196.\n\nUse `?include=entities` to include typed entity mentions in each paragraph.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paper with paragraphs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "paper": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "partId": {
+                              "type": "string"
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "sortId": {
+                              "type": "string"
+                            },
+                            "labels": {
+                              "type": "array",
+                              "nullable": true,
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "partId",
+                            "title",
+                            "sortId",
+                            "labels"
+                          ]
+                        },
+                        "paragraphs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "standardReferenceId": {
+                                "type": "string"
+                              },
+                              "sortId": {
+                                "type": "string"
+                              },
+                              "paperId": {
+                                "type": "string"
+                              },
+                              "sectionId": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "partId": {
+                                "type": "string"
+                              },
+                              "paperTitle": {
+                                "type": "string"
+                              },
+                              "sectionTitle": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "paragraphId": {
+                                "type": "string"
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "htmlText": {
+                                "type": "string"
+                              },
+                              "labels": {
+                                "type": "array",
+                                "nullable": true,
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "audio": {
+                                "type": "object",
+                                "nullable": true,
+                                "additionalProperties": {
+                                  "type": "object",
+                                  "additionalProperties": {
+                                    "type": "object",
+                                    "properties": {
+                                      "format": {
+                                        "type": "string"
+                                      },
+                                      "url": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "format",
+                                      "url"
+                                    ]
+                                  }
+                                }
+                              },
+                              "entities": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "being",
+                                        "place",
+                                        "order",
+                                        "race",
+                                        "religion",
+                                        "concept"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "type"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "standardReferenceId",
+                              "sortId",
+                              "paperId",
+                              "sectionId",
+                              "partId",
+                              "paperTitle",
+                              "sectionTitle",
+                              "paragraphId",
+                              "text",
+                              "htmlText",
+                              "labels",
+                              "audio"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "paper",
+                        "paragraphs"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Paper not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/papers/{id}/sections": {
+      "get": {
+        "operationId": "getPaperSections",
+        "tags": [
+          "Papers"
+        ],
+        "summary": "Get sections within a paper",
+        "description": "Returns all sections for a given paper, ordered by section number.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of sections",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "paperId": {
+                            "type": "string"
+                          },
+                          "sectionId": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "globalId": {
+                            "type": "string"
+                          },
+                          "sortId": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "paperId",
+                          "sectionId",
+                          "title",
+                          "globalId",
+                          "sortId"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Paper not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paragraphs/random": {
+      "get": {
+        "operationId": "getRandomParagraph",
+        "tags": [
+          "Paragraphs"
+        ],
+        "summary": "Get a random paragraph",
+        "description": "Returns a single random paragraph from the Urantia Book. Useful for daily quotes or exploration.\n\nUse `?include=entities` to include typed entity mentions in the response.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A random paragraph",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "standardReferenceId": {
+                          "type": "string"
+                        },
+                        "sortId": {
+                          "type": "string"
+                        },
+                        "paperId": {
+                          "type": "string"
+                        },
+                        "sectionId": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "partId": {
+                          "type": "string"
+                        },
+                        "paperTitle": {
+                          "type": "string"
+                        },
+                        "sectionTitle": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "paragraphId": {
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "htmlText": {
+                          "type": "string"
+                        },
+                        "labels": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "audio": {
+                          "type": "object",
+                          "nullable": true,
+                          "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "format": {
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "format",
+                                "url"
+                              ]
+                            }
+                          }
+                        },
+                        "entities": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "being",
+                                  "place",
+                                  "order",
+                                  "race",
+                                  "religion",
+                                  "concept"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "type"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "standardReferenceId",
+                        "sortId",
+                        "paperId",
+                        "sectionId",
+                        "partId",
+                        "paperTitle",
+                        "sectionTitle",
+                        "paragraphId",
+                        "text",
+                        "htmlText",
+                        "labels",
+                        "audio"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paragraphs/{ref}": {
+      "get": {
+        "operationId": "getParagraph",
+        "tags": [
+          "Paragraphs"
+        ],
+        "summary": "Get a paragraph by reference",
+        "description": "Look up a paragraph using any of three ID formats:\n- **globalId**: \"1:2.0.1\" (partId:paperId.sectionId.paragraphId)\n- **standardReferenceId**: \"2:0.1\" (paperId:sectionId.paragraphId)\n- **paperSectionParagraphId**: \"2.0.1\" (paperId.sectionId.paragraphId)\n\nThe format is auto-detected from the reference string.\n\nUse `?include=entities` to include typed entity mentions in the response.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "ref",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The paragraph",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "standardReferenceId": {
+                          "type": "string"
+                        },
+                        "sortId": {
+                          "type": "string"
+                        },
+                        "paperId": {
+                          "type": "string"
+                        },
+                        "sectionId": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "partId": {
+                          "type": "string"
+                        },
+                        "paperTitle": {
+                          "type": "string"
+                        },
+                        "sectionTitle": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "paragraphId": {
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "htmlText": {
+                          "type": "string"
+                        },
+                        "labels": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "audio": {
+                          "type": "object",
+                          "nullable": true,
+                          "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "format": {
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "format",
+                                "url"
+                              ]
+                            }
+                          }
+                        },
+                        "entities": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "being",
+                                  "place",
+                                  "order",
+                                  "race",
+                                  "religion",
+                                  "concept"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "type"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "standardReferenceId",
+                        "sortId",
+                        "paperId",
+                        "sectionId",
+                        "partId",
+                        "paperTitle",
+                        "sectionTitle",
+                        "paragraphId",
+                        "text",
+                        "htmlText",
+                        "labels",
+                        "audio"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reference format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Paragraph not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paragraphs/{ref}/context": {
+      "get": {
+        "operationId": "getParagraphContext",
+        "tags": [
+          "Paragraphs"
+        ],
+        "summary": "Get a paragraph with surrounding context",
+        "description": "Returns the target paragraph along with N paragraphs before and after it (ordered by sort_id).\nUseful for AI agents doing RAG that need surrounding context for better understanding.\nThe `window` query parameter controls how many paragraphs before/after to include (default: 2, max: 10).\n\nUse `?include=entities` to include typed entity mentions in the response.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "ref",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 2
+            },
+            "required": false,
+            "name": "window",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paragraph with context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "target": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "standardReferenceId": {
+                              "type": "string"
+                            },
+                            "sortId": {
+                              "type": "string"
+                            },
+                            "paperId": {
+                              "type": "string"
+                            },
+                            "sectionId": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "partId": {
+                              "type": "string"
+                            },
+                            "paperTitle": {
+                              "type": "string"
+                            },
+                            "sectionTitle": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "paragraphId": {
+                              "type": "string"
+                            },
+                            "text": {
+                              "type": "string"
+                            },
+                            "htmlText": {
+                              "type": "string"
+                            },
+                            "labels": {
+                              "type": "array",
+                              "nullable": true,
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "audio": {
+                              "type": "object",
+                              "nullable": true,
+                              "additionalProperties": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "format": {
+                                      "type": "string"
+                                    },
+                                    "url": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "format",
+                                    "url"
+                                  ]
+                                }
+                              }
+                            },
+                            "entities": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "being",
+                                      "place",
+                                      "order",
+                                      "race",
+                                      "religion",
+                                      "concept"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "type"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "standardReferenceId",
+                            "sortId",
+                            "paperId",
+                            "sectionId",
+                            "partId",
+                            "paperTitle",
+                            "sectionTitle",
+                            "paragraphId",
+                            "text",
+                            "htmlText",
+                            "labels",
+                            "audio"
+                          ]
+                        },
+                        "before": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "standardReferenceId": {
+                                "type": "string"
+                              },
+                              "sortId": {
+                                "type": "string"
+                              },
+                              "paperId": {
+                                "type": "string"
+                              },
+                              "sectionId": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "partId": {
+                                "type": "string"
+                              },
+                              "paperTitle": {
+                                "type": "string"
+                              },
+                              "sectionTitle": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "paragraphId": {
+                                "type": "string"
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "htmlText": {
+                                "type": "string"
+                              },
+                              "labels": {
+                                "type": "array",
+                                "nullable": true,
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "audio": {
+                                "type": "object",
+                                "nullable": true,
+                                "additionalProperties": {
+                                  "type": "object",
+                                  "additionalProperties": {
+                                    "type": "object",
+                                    "properties": {
+                                      "format": {
+                                        "type": "string"
+                                      },
+                                      "url": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "format",
+                                      "url"
+                                    ]
+                                  }
+                                }
+                              },
+                              "entities": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "being",
+                                        "place",
+                                        "order",
+                                        "race",
+                                        "religion",
+                                        "concept"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "type"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "standardReferenceId",
+                              "sortId",
+                              "paperId",
+                              "sectionId",
+                              "partId",
+                              "paperTitle",
+                              "sectionTitle",
+                              "paragraphId",
+                              "text",
+                              "htmlText",
+                              "labels",
+                              "audio"
+                            ]
+                          }
+                        },
+                        "after": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "standardReferenceId": {
+                                "type": "string"
+                              },
+                              "sortId": {
+                                "type": "string"
+                              },
+                              "paperId": {
+                                "type": "string"
+                              },
+                              "sectionId": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "partId": {
+                                "type": "string"
+                              },
+                              "paperTitle": {
+                                "type": "string"
+                              },
+                              "sectionTitle": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "paragraphId": {
+                                "type": "string"
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "htmlText": {
+                                "type": "string"
+                              },
+                              "labels": {
+                                "type": "array",
+                                "nullable": true,
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "audio": {
+                                "type": "object",
+                                "nullable": true,
+                                "additionalProperties": {
+                                  "type": "object",
+                                  "additionalProperties": {
+                                    "type": "object",
+                                    "properties": {
+                                      "format": {
+                                        "type": "string"
+                                      },
+                                      "url": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "format",
+                                      "url"
+                                    ]
+                                  }
+                                }
+                              },
+                              "entities": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "being",
+                                        "place",
+                                        "order",
+                                        "race",
+                                        "religion",
+                                        "concept"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "type"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "standardReferenceId",
+                              "sortId",
+                              "paperId",
+                              "sectionId",
+                              "partId",
+                              "paperTitle",
+                              "sectionTitle",
+                              "paragraphId",
+                              "text",
+                              "htmlText",
+                              "labels",
+                              "audio"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "target",
+                        "before",
+                        "after"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reference format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Paragraph not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search": {
+      "post": {
+        "operationId": "search",
+        "tags": [
+          "Search"
+        ],
+        "summary": "Full-text search across all paragraphs",
+        "description": "Search the Urantia Papers using full-text search. Supports three search modes:\n- **and**: All words must appear (default)\n- **or**: Any word can appear\n- **phrase**: Exact phrase match\n\nResults are ranked by relevance. Optional filters: paperId, partId.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "q": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  },
+                  "page": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 0
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 20
+                  },
+                  "paperId": {
+                    "type": "string"
+                  },
+                  "partId": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "phrase",
+                      "and",
+                      "or"
+                    ],
+                    "default": "and"
+                  },
+                  "include": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "q"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search results with pagination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "standardReferenceId": {
+                            "type": "string"
+                          },
+                          "sortId": {
+                            "type": "string"
+                          },
+                          "paperId": {
+                            "type": "string"
+                          },
+                          "sectionId": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "partId": {
+                            "type": "string"
+                          },
+                          "paperTitle": {
+                            "type": "string"
+                          },
+                          "sectionTitle": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "paragraphId": {
+                            "type": "string"
+                          },
+                          "text": {
+                            "type": "string"
+                          },
+                          "htmlText": {
+                            "type": "string"
+                          },
+                          "labels": {
+                            "type": "array",
+                            "nullable": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "audio": {
+                            "type": "object",
+                            "nullable": true,
+                            "additionalProperties": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                  "format": {
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "format",
+                                  "url"
+                                ]
+                              }
+                            }
+                          },
+                          "entities": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "being",
+                                    "place",
+                                    "order",
+                                    "race",
+                                    "religion",
+                                    "concept"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "type"
+                              ]
+                            }
+                          },
+                          "rank": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "standardReferenceId",
+                          "sortId",
+                          "paperId",
+                          "sectionId",
+                          "partId",
+                          "paperTitle",
+                          "sectionTitle",
+                          "paragraphId",
+                          "text",
+                          "htmlText",
+                          "labels",
+                          "audio",
+                          "rank"
+                        ]
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "integer"
+                        },
+                        "limit": {
+                          "type": "integer"
+                        },
+                        "total": {
+                          "type": "integer"
+                        },
+                        "totalPages": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "page",
+                        "limit",
+                        "total",
+                        "totalPages"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid search query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/semantic": {
+      "post": {
+        "operationId": "semanticSearch",
+        "tags": [
+          "Search"
+        ],
+        "summary": "Semantic similarity search across all paragraphs",
+        "description": "Search the Urantia Papers using semantic similarity (vector embeddings).\nReturns conceptually related results even without exact keyword matches.\nOptional filters: paperId, partId.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "q": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  },
+                  "page": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "default": 0
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100,
+                    "default": 20
+                  },
+                  "paperId": {
+                    "type": "string"
+                  },
+                  "partId": {
+                    "type": "string"
+                  },
+                  "include": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "q"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Semantic search results with pagination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "standardReferenceId": {
+                            "type": "string"
+                          },
+                          "sortId": {
+                            "type": "string"
+                          },
+                          "paperId": {
+                            "type": "string"
+                          },
+                          "sectionId": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "partId": {
+                            "type": "string"
+                          },
+                          "paperTitle": {
+                            "type": "string"
+                          },
+                          "sectionTitle": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "paragraphId": {
+                            "type": "string"
+                          },
+                          "text": {
+                            "type": "string"
+                          },
+                          "htmlText": {
+                            "type": "string"
+                          },
+                          "labels": {
+                            "type": "array",
+                            "nullable": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "audio": {
+                            "type": "object",
+                            "nullable": true,
+                            "additionalProperties": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                  "format": {
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "format",
+                                  "url"
+                                ]
+                              }
+                            }
+                          },
+                          "entities": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "being",
+                                    "place",
+                                    "order",
+                                    "race",
+                                    "religion",
+                                    "concept"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "type"
+                              ]
+                            }
+                          },
+                          "similarity": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "standardReferenceId",
+                          "sortId",
+                          "paperId",
+                          "sectionId",
+                          "partId",
+                          "paperTitle",
+                          "sectionTitle",
+                          "paragraphId",
+                          "text",
+                          "htmlText",
+                          "labels",
+                          "audio",
+                          "similarity"
+                        ]
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "integer"
+                        },
+                        "limit": {
+                          "type": "integer"
+                        },
+                        "total": {
+                          "type": "integer"
+                        },
+                        "totalPages": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "page",
+                        "limit",
+                        "total",
+                        "totalPages"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid search query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entities": {
+      "get": {
+        "operationId": "listEntities",
+        "tags": [
+          "Entities"
+        ],
+        "summary": "List entities",
+        "description": "Browse the entity catalog (beings, places, orders, races, religions, concepts). Supports filtering by type and searching by name.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "minimum": 0,
+              "default": 0
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "being",
+                "place",
+                "order",
+                "race",
+                "religion",
+                "concept"
+              ]
+            },
+            "required": false,
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of entities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "being",
+                              "place",
+                              "order",
+                              "race",
+                              "religion",
+                              "concept"
+                            ]
+                          },
+                          "aliases": {
+                            "type": "array",
+                            "nullable": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "description": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "seeAlso": {
+                            "type": "array",
+                            "nullable": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "citationCount": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "type",
+                          "aliases",
+                          "description",
+                          "seeAlso",
+                          "citationCount"
+                        ]
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "integer"
+                        },
+                        "limit": {
+                          "type": "integer"
+                        },
+                        "total": {
+                          "type": "integer"
+                        },
+                        "totalPages": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "page",
+                        "limit",
+                        "total",
+                        "totalPages"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entities/{id}": {
+      "get": {
+        "operationId": "getEntity",
+        "tags": [
+          "Entities"
+        ],
+        "summary": "Get an entity by ID",
+        "description": "Returns a single entity by its slug ID.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "being",
+                            "place",
+                            "order",
+                            "race",
+                            "religion",
+                            "concept"
+                          ]
+                        },
+                        "aliases": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "seeAlso": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "citationCount": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "type",
+                        "aliases",
+                        "description",
+                        "seeAlso",
+                        "citationCount"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entities/{id}/paragraphs": {
+      "get": {
+        "operationId": "getEntityParagraphs",
+        "tags": [
+          "Entities"
+        ],
+        "summary": "Get paragraphs mentioning an entity",
+        "description": "Returns all paragraphs that mention a given entity, ordered by position in the text.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "minimum": 0,
+              "default": 0
+            },
+            "required": false,
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated paragraphs mentioning the entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "standardReferenceId": {
+                            "type": "string"
+                          },
+                          "sortId": {
+                            "type": "string"
+                          },
+                          "paperId": {
+                            "type": "string"
+                          },
+                          "sectionId": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "partId": {
+                            "type": "string"
+                          },
+                          "paperTitle": {
+                            "type": "string"
+                          },
+                          "sectionTitle": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "paragraphId": {
+                            "type": "string"
+                          },
+                          "text": {
+                            "type": "string"
+                          },
+                          "htmlText": {
+                            "type": "string"
+                          },
+                          "labels": {
+                            "type": "array",
+                            "nullable": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "audio": {
+                            "type": "object",
+                            "nullable": true,
+                            "additionalProperties": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "object",
+                                "properties": {
+                                  "format": {
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "format",
+                                  "url"
+                                ]
+                              }
+                            }
+                          },
+                          "entities": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "being",
+                                    "place",
+                                    "order",
+                                    "race",
+                                    "religion",
+                                    "concept"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "type"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "standardReferenceId",
+                          "sortId",
+                          "paperId",
+                          "sectionId",
+                          "partId",
+                          "paperTitle",
+                          "sectionTitle",
+                          "paragraphId",
+                          "text",
+                          "htmlText",
+                          "labels",
+                          "audio"
+                        ]
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "integer"
+                        },
+                        "limit": {
+                          "type": "integer"
+                        },
+                        "total": {
+                          "type": "integer"
+                        },
+                        "totalPages": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "page",
+                        "limit",
+                        "total",
+                        "totalPages"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audio/{paragraphId}": {
+      "get": {
+        "operationId": "getAudio",
+        "tags": [
+          "Audio"
+        ],
+        "summary": "Get audio URL for a paragraph",
+        "description": "Returns the audio file URL for a given paragraph. Accepts any paragraph reference format (globalId, standardReferenceId, or paperSectionParagraphId).",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "paragraphId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audio information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "paragraphId": {
+                          "type": "string"
+                        },
+                        "audio": {
+                          "type": "object",
+                          "nullable": true,
+                          "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "format": {
+                                  "type": "string"
+                                },
+                                "url": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "format",
+                                "url"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "paragraphId",
+                        "audio"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Paragraph not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
