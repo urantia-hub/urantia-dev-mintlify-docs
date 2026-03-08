@@ -58,6 +58,12 @@ curl https://api.urantia.dev/entities/adam-and-eve
 curl https://api.urantia.dev/entities/adam-and-eve/paragraphs
 ```
 
+You can also include entity mentions inline on any paragraph-returning endpoint with `?include=entities`:
+
+```bash
+curl "https://api.urantia.dev/paragraphs/2:0.1?include=entities"
+```
+
 ## Read a full paper
 
 ```bash

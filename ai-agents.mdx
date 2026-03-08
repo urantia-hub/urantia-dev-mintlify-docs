@@ -65,6 +65,12 @@ curl https://api.urantia.dev/entities/thought-adjusters/paragraphs
 
 This is useful for building knowledge graphs, entity-aware RAG, or letting users explore topics by entity.
 
+You can also include entity mentions inline on any paragraph-returning endpoint by adding `?include=entities` (or `"include": "entities"` in search request bodies). Each entity includes an `id`, `name`, and `type`:
+
+```bash
+curl "https://api.urantia.dev/paragraphs/2:0.1?include=entities"
+```
+
 ## Context window
 
 The `/paragraphs/:ref/context` endpoint is particularly useful for RAG. It returns the target paragraph plus surrounding paragraphs (configurable via the `window` parameter, 1-10).
