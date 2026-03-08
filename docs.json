@@ -30,7 +30,7 @@
           },
           {
             "group": "More",
-            "pages": ["use-cases", "changelog"]
+            "pages": ["use-cases"]
           }
         ]
       },
@@ -59,6 +59,14 @@
               "api-reference/endpoint/get-random-paragraph",
               "api-reference/endpoint/get-paragraph",
               "api-reference/endpoint/get-paragraph-context"
+            ]
+          },
+          {
+            "group": "Entities",
+            "pages": [
+              "api-reference/endpoint/list-entities",
+              "api-reference/endpoint/get-entity",
+              "api-reference/endpoint/get-entity-paragraphs"
             ]
           },
           {

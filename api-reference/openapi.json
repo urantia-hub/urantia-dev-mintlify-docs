@@ -23,9 +23,7 @@
         "/toc": {
             "get": {
                 "operationId": "getToc",
-                "tags": [
-                    "Table of Contents"
-                ],
+                "tags": ["Table of Contents"],
                 "summary": "Get the full table of contents",
                 "description": "Returns the complete table of contents with parts and their papers. This is typically the first endpoint an AI agent should call to understand the book structure.",
                 "responses": {
@@ -44,60 +42,30 @@
                                                     "items": {
                                                         "type": "object",
                                                         "properties": {
-                                                            "id": {
-                                                                "type": "string"
-                                                            },
-                                                            "title": {
-                                                                "type": "string"
-                                                            },
-                                                            "sponsorship": {
-                                                                "type": "string",
-                                                                "nullable": true
-                                                            },
+                                                            "id": { "type": "string" },
+                                                            "title": { "type": "string" },
+                                                            "sponsorship": { "type": "string", "nullable": true },
                                                             "papers": {
                                                                 "type": "array",
                                                                 "items": {
                                                                     "type": "object",
                                                                     "properties": {
-                                                                        "id": {
-                                                                            "type": "string"
-                                                                        },
-                                                                        "title": {
-                                                                            "type": "string"
-                                                                        },
-                                                                        "labels": {
-                                                                            "type": "array",
-                                                                            "nullable": true,
-                                                                            "items": {
-                                                                                "type": "string"
-                                                                            }
-                                                                        }
+                                                                        "id": { "type": "string" },
+                                                                        "title": { "type": "string" },
+                                                                        "labels": { "type": "array", "nullable": true, "items": { "type": "string" } }
                                                                     },
-                                                                    "required": [
-                                                                        "id",
-                                                                        "title",
-                                                                        "labels"
-                                                                    ]
+                                                                    "required": ["id", "title", "labels"]
                                                                 }
                                                             }
                                                         },
-                                                        "required": [
-                                                            "id",
-                                                            "title",
-                                                            "sponsorship",
-                                                            "papers"
-                                                        ]
+                                                        "required": ["id", "title", "sponsorship", "papers"]
                                                     }
                                                 }
                                             },
-                                            "required": [
-                                                "parts"
-                                            ]
+                                            "required": ["parts"]
                                         }
                                     },
-                                    "required": [
-                                        "data"
-                                    ]
+                                    "required": ["data"]
                                 }
                             }
                         }
@@ -109,13 +77,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -126,9 +90,7 @@
         "/papers": {
             "get": {
                 "operationId": "listPapers",
-                "tags": [
-                    "Papers"
-                ],
+                "tags": ["Papers"],
                 "summary": "List all 197 papers",
                 "description": "Returns metadata for all papers in the Urantia Book, ordered by paper number.",
                 "responses": {
@@ -144,39 +106,17 @@
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
-                                                    "id": {
-                                                        "type": "string"
-                                                    },
-                                                    "partId": {
-                                                        "type": "string"
-                                                    },
-                                                    "title": {
-                                                        "type": "string"
-                                                    },
-                                                    "sortId": {
-                                                        "type": "string"
-                                                    },
-                                                    "labels": {
-                                                        "type": "array",
-                                                        "nullable": true,
-                                                        "items": {
-                                                            "type": "string"
-                                                        }
-                                                    }
+                                                    "id": { "type": "string" },
+                                                    "partId": { "type": "string" },
+                                                    "title": { "type": "string" },
+                                                    "sortId": { "type": "string" },
+                                                    "labels": { "type": "array", "nullable": true, "items": { "type": "string" } }
                                                 },
-                                                "required": [
-                                                    "id",
-                                                    "partId",
-                                                    "title",
-                                                    "sortId",
-                                                    "labels"
-                                                ]
+                                                "required": ["id", "partId", "title", "sortId", "labels"]
                                             }
                                         }
                                     },
-                                    "required": [
-                                        "data"
-                                    ]
+                                    "required": ["data"]
                                 }
                             }
                         }
@@ -188,13 +128,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -205,20 +141,12 @@
         "/papers/{id}": {
             "get": {
                 "operationId": "getPaper",
-                "tags": [
-                    "Papers"
-                ],
+                "tags": ["Papers"],
                 "summary": "Get a paper with all its paragraphs",
-                "description": "Returns a single paper's metadata along with all its paragraphs in order. Paper IDs range from 0 (Foreword) to 196.",
+                "description": "Returns a single paper's metadata along with all its paragraphs in order. Paper IDs range from 0 (Foreword) to 196.\n\nUse `?include=entities` to include typed entity mentions in each paragraph.",
                 "parameters": [
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "required": true,
-                        "name": "id",
-                        "in": "path"
-                    }
+                    { "schema": { "type": "string" }, "required": true, "name": "id", "in": "path" },
+                    { "schema": { "type": "string" }, "required": false, "name": "include", "in": "query" }
                 ],
                 "responses": {
                     "200": {
@@ -234,81 +162,31 @@
                                                 "paper": {
                                                     "type": "object",
                                                     "properties": {
-                                                        "id": {
-                                                            "type": "string"
-                                                        },
-                                                        "partId": {
-                                                            "type": "string"
-                                                        },
-                                                        "title": {
-                                                            "type": "string"
-                                                        },
-                                                        "sortId": {
-                                                            "type": "string"
-                                                        },
-                                                        "labels": {
-                                                            "type": "array",
-                                                            "nullable": true,
-                                                            "items": {
-                                                                "type": "string"
-                                                            }
-                                                        }
+                                                        "id": { "type": "string" },
+                                                        "partId": { "type": "string" },
+                                                        "title": { "type": "string" },
+                                                        "sortId": { "type": "string" },
+                                                        "labels": { "type": "array", "nullable": true, "items": { "type": "string" } }
                                                     },
-                                                    "required": [
-                                                        "id",
-                                                        "partId",
-                                                        "title",
-                                                        "sortId",
-                                                        "labels"
-                                                    ]
+                                                    "required": ["id", "partId", "title", "sortId", "labels"]
                                                 },
                                                 "paragraphs": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "object",
                                                         "properties": {
-                                                            "id": {
-                                                                "type": "string"
-                                                            },
-                                                            "standardReferenceId": {
-                                                                "type": "string"
-                                                            },
-                                                            "sortId": {
-                                                                "type": "string"
-                                                            },
-                                                            "paperId": {
-                                                                "type": "string"
-                                                            },
-                                                            "sectionId": {
-                                                                "type": "string",
-                                                                "nullable": true
-                                                            },
-                                                            "partId": {
-                                                                "type": "string"
-                                                            },
-                                                            "paperTitle": {
-                                                                "type": "string"
-                                                            },
-                                                            "sectionTitle": {
-                                                                "type": "string",
-                                                                "nullable": true
-                                                            },
-                                                            "paragraphId": {
-                                                                "type": "string"
-                                                            },
-                                                            "text": {
-                                                                "type": "string"
-                                                            },
-                                                            "htmlText": {
-                                                                "type": "string"
-                                                            },
-                                                            "labels": {
-                                                                "type": "array",
-                                                                "nullable": true,
-                                                                "items": {
-                                                                    "type": "string"
-                                                                }
-                                                            },
+                                                            "id": { "type": "string" },
+                                                            "standardReferenceId": { "type": "string" },
+                                                            "sortId": { "type": "string" },
+                                                            "paperId": { "type": "string" },
+                                                            "sectionId": { "type": "string", "nullable": true },
+                                                            "partId": { "type": "string" },
+                                                            "paperTitle": { "type": "string" },
+                                                            "sectionTitle": { "type": "string", "nullable": true },
+                                                            "paragraphId": { "type": "string" },
+                                                            "text": { "type": "string" },
+                                                            "htmlText": { "type": "string" },
+                                                            "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
                                                             "audio": {
                                                                 "type": "object",
                                                                 "nullable": true,
@@ -317,48 +195,35 @@
                                                                     "additionalProperties": {
                                                                         "type": "object",
                                                                         "properties": {
-                                                                            "format": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "url": {
-                                                                                "type": "string"
-                                                                            }
+                                                                            "format": { "type": "string" },
+                                                                            "url": { "type": "string" }
                                                                         },
-                                                                        "required": [
-                                                                            "format",
-                                                                            "url"
-                                                                        ]
+                                                                        "required": ["format", "url"]
                                                                     }
+                                                                }
+                                                            },
+                                                            "entities": {
+                                                                "type": "array",
+                                                                "nullable": true,
+                                                                "items": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "id": { "type": "string" },
+                                                                        "name": { "type": "string" },
+                                                                        "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
+                                                                    },
+                                                                    "required": ["id", "name", "type"]
                                                                 }
                                                             }
                                                         },
-                                                        "required": [
-                                                            "id",
-                                                            "standardReferenceId",
-                                                            "sortId",
-                                                            "paperId",
-                                                            "sectionId",
-                                                            "partId",
-                                                            "paperTitle",
-                                                            "sectionTitle",
-                                                            "paragraphId",
-                                                            "text",
-                                                            "htmlText",
-                                                            "labels",
-                                                            "audio"
-                                                        ]
+                                                        "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
                                                     }
                                                 }
                                             },
-                                            "required": [
-                                                "paper",
-                                                "paragraphs"
-                                            ]
+                                            "required": ["paper", "paragraphs"]
                                         }
                                     },
-                                    "required": [
-                                        "data"
-                                    ]
+                                    "required": ["data"]
                                 }
                             }
                         }
@@ -370,13 +235,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -388,13 +249,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -405,20 +262,11 @@
         "/papers/{id}/sections": {
             "get": {
                 "operationId": "getPaperSections",
-                "tags": [
-                    "Papers"
-                ],
+                "tags": ["Papers"],
                 "summary": "Get sections within a paper",
                 "description": "Returns all sections for a given paper, ordered by section number.",
                 "parameters": [
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "required": true,
-                        "name": "id",
-                        "in": "path"
-                    }
+                    { "schema": { "type": "string" }, "required": true, "name": "id", "in": "path" }
                 ],
                 "responses": {
                     "200": {
@@ -433,40 +281,18 @@
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
-                                                    "id": {
-                                                        "type": "string"
-                                                    },
-                                                    "paperId": {
-                                                        "type": "string"
-                                                    },
-                                                    "sectionId": {
-                                                        "type": "string"
-                                                    },
-                                                    "title": {
-                                                        "type": "string",
-                                                        "nullable": true
-                                                    },
-                                                    "globalId": {
-                                                        "type": "string"
-                                                    },
-                                                    "sortId": {
-                                                        "type": "string"
-                                                    }
+                                                    "id": { "type": "string" },
+                                                    "paperId": { "type": "string" },
+                                                    "sectionId": { "type": "string" },
+                                                    "title": { "type": "string", "nullable": true },
+                                                    "globalId": { "type": "string" },
+                                                    "sortId": { "type": "string" }
                                                 },
-                                                "required": [
-                                                    "id",
-                                                    "paperId",
-                                                    "sectionId",
-                                                    "title",
-                                                    "globalId",
-                                                    "sortId"
-                                                ]
+                                                "required": ["id", "paperId", "sectionId", "title", "globalId", "sortId"]
                                             }
                                         }
                                     },
-                                    "required": [
-                                        "data"
-                                    ]
+                                    "required": ["data"]
                                 }
                             }
                         }
@@ -478,13 +304,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -496,13 +318,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -513,11 +331,12 @@
         "/paragraphs/random": {
             "get": {
                 "operationId": "getRandomParagraph",
-                "tags": [
-                    "Paragraphs"
-                ],
+                "tags": ["Paragraphs"],
                 "summary": "Get a random paragraph",
-                "description": "Returns a single random paragraph from the Urantia Book. Useful for daily quotes or exploration.",
+                "description": "Returns a single random paragraph from the Urantia Book. Useful for daily quotes or exploration.\n\nUse `?include=entities` to include typed entity mentions (beings, places, orders, races, religions, concepts) in the response.",
+                "parameters": [
+                    { "schema": { "type": "string" }, "required": false, "name": "include", "in": "query" }
+                ],
                 "responses": {
                     "200": {
                         "description": "A random paragraph",
@@ -529,48 +348,18 @@
                                         "data": {
                                             "type": "object",
                                             "properties": {
-                                                "id": {
-                                                    "type": "string"
-                                                },
-                                                "standardReferenceId": {
-                                                    "type": "string"
-                                                },
-                                                "sortId": {
-                                                    "type": "string"
-                                                },
-                                                "paperId": {
-                                                    "type": "string"
-                                                },
-                                                "sectionId": {
-                                                    "type": "string",
-                                                    "nullable": true
-                                                },
-                                                "partId": {
-                                                    "type": "string"
-                                                },
-                                                "paperTitle": {
-                                                    "type": "string"
-                                                },
-                                                "sectionTitle": {
-                                                    "type": "string",
-                                                    "nullable": true
-                                                },
-                                                "paragraphId": {
-                                                    "type": "string"
-                                                },
-                                                "text": {
-                                                    "type": "string"
-                                                },
-                                                "htmlText": {
-                                                    "type": "string"
-                                                },
-                                                "labels": {
-                                                    "type": "array",
-                                                    "nullable": true,
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
+                                                "id": { "type": "string" },
+                                                "standardReferenceId": { "type": "string" },
+                                                "sortId": { "type": "string" },
+                                                "paperId": { "type": "string" },
+                                                "sectionId": { "type": "string", "nullable": true },
+                                                "partId": { "type": "string" },
+                                                "paperTitle": { "type": "string" },
+                                                "sectionTitle": { "type": "string", "nullable": true },
+                                                "paragraphId": { "type": "string" },
+                                                "text": { "type": "string" },
+                                                "htmlText": { "type": "string" },
+                                                "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
                                                 "audio": {
                                                     "type": "object",
                                                     "nullable": true,
@@ -579,41 +368,31 @@
                                                         "additionalProperties": {
                                                             "type": "object",
                                                             "properties": {
-                                                                "format": {
-                                                                    "type": "string"
-                                                                },
-                                                                "url": {
-                                                                    "type": "string"
-                                                                }
+                                                                "format": { "type": "string" },
+                                                                "url": { "type": "string" }
                                                             },
-                                                            "required": [
-                                                                "format",
-                                                                "url"
-                                                            ]
+                                                            "required": ["format", "url"]
                                                         }
+                                                    }
+                                                },
+                                                "entities": {
+                                                    "type": "array",
+                                                    "nullable": true,
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": { "type": "string" },
+                                                            "name": { "type": "string" },
+                                                            "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
+                                                        },
+                                                        "required": ["id", "name", "type"]
                                                     }
                                                 }
                                             },
-                                            "required": [
-                                                "id",
-                                                "standardReferenceId",
-                                                "sortId",
-                                                "paperId",
-                                                "sectionId",
-                                                "partId",
-                                                "paperTitle",
-                                                "sectionTitle",
-                                                "paragraphId",
-                                                "text",
-                                                "htmlText",
-                                                "labels",
-                                                "audio"
-                                            ]
+                                            "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
                                         }
                                     },
-                                    "required": [
-                                        "data"
-                                    ]
+                                    "required": ["data"]
                                 }
                             }
                         }
@@ -625,13 +404,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -642,20 +417,12 @@
         "/paragraphs/{ref}": {
             "get": {
                 "operationId": "getParagraph",
-                "tags": [
-                    "Paragraphs"
-                ],
+                "tags": ["Paragraphs"],
                 "summary": "Get a paragraph by reference",
-                "description": "Look up a paragraph using any of three ID formats:\n- **globalId**: \"1:2.0.1\" (partId:paperId.sectionId.paragraphId)\n- **standardReferenceId**: \"2:0.1\" (paperId:sectionId.paragraphId)\n- **paperSectionParagraphId**: \"2.0.1\" (paperId.sectionId.paragraphId)\n\nThe format is auto-detected from the reference string.",
+                "description": "Look up a paragraph using any of three ID formats:\n- **globalId**: \"1:2.0.1\" (partId:paperId.sectionId.paragraphId)\n- **standardReferenceId**: \"2:0.1\" (paperId:sectionId.paragraphId)\n- **paperSectionParagraphId**: \"2.0.1\" (paperId.sectionId.paragraphId)\n\nThe format is auto-detected from the reference string.\n\nUse `?include=entities` to include typed entity mentions in the response.",
                 "parameters": [
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "required": true,
-                        "name": "ref",
-                        "in": "path"
-                    }
+                    { "schema": { "type": "string" }, "required": true, "name": "ref", "in": "path" },
+                    { "schema": { "type": "string" }, "required": false, "name": "include", "in": "query" }
                 ],
                 "responses": {
                     "200": {
@@ -668,48 +435,18 @@
                                         "data": {
                                             "type": "object",
                                             "properties": {
-                                                "id": {
-                                                    "type": "string"
-                                                },
-                                                "standardReferenceId": {
-                                                    "type": "string"
-                                                },
-                                                "sortId": {
-                                                    "type": "string"
-                                                },
-                                                "paperId": {
-                                                    "type": "string"
-                                                },
-                                                "sectionId": {
-                                                    "type": "string",
-                                                    "nullable": true
-                                                },
-                                                "partId": {
-                                                    "type": "string"
-                                                },
-                                                "paperTitle": {
-                                                    "type": "string"
-                                                },
-                                                "sectionTitle": {
-                                                    "type": "string",
-                                                    "nullable": true
-                                                },
-                                                "paragraphId": {
-                                                    "type": "string"
-                                                },
-                                                "text": {
-                                                    "type": "string"
-                                                },
-                                                "htmlText": {
-                                                    "type": "string"
-                                                },
-                                                "labels": {
-                                                    "type": "array",
-                                                    "nullable": true,
-                                                    "items": {
-                                                        "type": "string"
-                                                    }
-                                                },
+                                                "id": { "type": "string" },
+                                                "standardReferenceId": { "type": "string" },
+                                                "sortId": { "type": "string" },
+                                                "paperId": { "type": "string" },
+                                                "sectionId": { "type": "string", "nullable": true },
+                                                "partId": { "type": "string" },
+                                                "paperTitle": { "type": "string" },
+                                                "sectionTitle": { "type": "string", "nullable": true },
+                                                "paragraphId": { "type": "string" },
+                                                "text": { "type": "string" },
+                                                "htmlText": { "type": "string" },
+                                                "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
                                                 "audio": {
                                                     "type": "object",
                                                     "nullable": true,
@@ -718,41 +455,31 @@
                                                         "additionalProperties": {
                                                             "type": "object",
                                                             "properties": {
-                                                                "format": {
-                                                                    "type": "string"
-                                                                },
-                                                                "url": {
-                                                                    "type": "string"
-                                                                }
+                                                                "format": { "type": "string" },
+                                                                "url": { "type": "string" }
                                                             },
-                                                            "required": [
-                                                                "format",
-                                                                "url"
-                                                            ]
+                                                            "required": ["format", "url"]
                                                         }
+                                                    }
+                                                },
+                                                "entities": {
+                                                    "type": "array",
+                                                    "nullable": true,
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": { "type": "string" },
+                                                            "name": { "type": "string" },
+                                                            "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
+                                                        },
+                                                        "required": ["id", "name", "type"]
                                                     }
                                                 }
                                             },
-                                            "required": [
-                                                "id",
-                                                "standardReferenceId",
-                                                "sortId",
-                                                "paperId",
-                                                "sectionId",
-                                                "partId",
-                                                "paperTitle",
-                                                "sectionTitle",
-                                                "paragraphId",
-                                                "text",
-                                                "htmlText",
-                                                "labels",
-                                                "audio"
-                                            ]
+                                            "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
                                         }
                                     },
-                                    "required": [
-                                        "data"
-                                    ]
+                                    "required": ["data"]
                                 }
                             }
                         }
@@ -764,13 +491,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -782,13 +505,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -800,13 +519,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -817,31 +532,13 @@
         "/paragraphs/{ref}/context": {
             "get": {
                 "operationId": "getParagraphContext",
-                "tags": [
-                    "Paragraphs"
-                ],
+                "tags": ["Paragraphs"],
                 "summary": "Get a paragraph with surrounding context",
-                "description": "Returns the target paragraph along with N paragraphs before and after it (ordered by sort_id).\nUseful for AI agents doing RAG that need surrounding context for better understanding.\nThe `window` query parameter controls how many paragraphs before/after to include (default: 2, max: 10).",
+                "description": "Returns the target paragraph along with N paragraphs before and after it (ordered by sort_id).\nUseful for AI agents doing RAG that need surrounding context for better understanding.\nThe `window` query parameter controls how many paragraphs before/after to include (default: 2, max: 10).\n\nUse `?include=entities` to include typed entity mentions in the response.",
                 "parameters": [
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "required": true,
-                        "name": "ref",
-                        "in": "path"
-                    },
-                    {
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 10,
-                            "default": 2
-                        },
-                        "required": false,
-                        "name": "window",
-                        "in": "query"
-                    }
+                    { "schema": { "type": "string" }, "required": true, "name": "ref", "in": "path" },
+                    { "schema": { "type": "integer", "minimum": 1, "maximum": 10, "default": 2 }, "required": false, "name": "window", "in": "query" },
+                    { "schema": { "type": "string" }, "required": false, "name": "include", "in": "query" }
                 ],
                 "responses": {
                     "200": {
@@ -857,48 +554,18 @@
                                                 "target": {
                                                     "type": "object",
                                                     "properties": {
-                                                        "id": {
-                                                            "type": "string"
-                                                        },
-                                                        "standardReferenceId": {
-                                                            "type": "string"
-                                                        },
-                                                        "sortId": {
-                                                            "type": "string"
-                                                        },
-                                                        "paperId": {
-                                                            "type": "string"
-                                                        },
-                                                        "sectionId": {
-                                                            "type": "string",
-                                                            "nullable": true
-                                                        },
-                                                        "partId": {
-                                                            "type": "string"
-                                                        },
-                                                        "paperTitle": {
-                                                            "type": "string"
-                                                        },
-                                                        "sectionTitle": {
-                                                            "type": "string",
-                                                            "nullable": true
-                                                        },
-                                                        "paragraphId": {
-                                                            "type": "string"
-                                                        },
-                                                        "text": {
-                                                            "type": "string"
-                                                        },
-                                                        "htmlText": {
-                                                            "type": "string"
-                                                        },
-                                                        "labels": {
-                                                            "type": "array",
-                                                            "nullable": true,
-                                                            "items": {
-                                                                "type": "string"
-                                                            }
-                                                        },
+                                                        "id": { "type": "string" },
+                                                        "standardReferenceId": { "type": "string" },
+                                                        "sortId": { "type": "string" },
+                                                        "paperId": { "type": "string" },
+                                                        "sectionId": { "type": "string", "nullable": true },
+                                                        "partId": { "type": "string" },
+                                                        "paperTitle": { "type": "string" },
+                                                        "sectionTitle": { "type": "string", "nullable": true },
+                                                        "paragraphId": { "type": "string" },
+                                                        "text": { "type": "string" },
+                                                        "htmlText": { "type": "string" },
+                                                        "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
                                                         "audio": {
                                                             "type": "object",
                                                             "nullable": true,
@@ -907,84 +574,46 @@
                                                                 "additionalProperties": {
                                                                     "type": "object",
                                                                     "properties": {
-                                                                        "format": {
-                                                                            "type": "string"
-                                                                        },
-                                                                        "url": {
-                                                                            "type": "string"
-                                                                        }
+                                                                        "format": { "type": "string" },
+                                                                        "url": { "type": "string" }
                                                                     },
-                                                                    "required": [
-                                                                        "format",
-                                                                        "url"
-                                                                    ]
+                                                                    "required": ["format", "url"]
                                                                 }
+                                                            }
+                                                        },
+                                                        "entities": {
+                                                            "type": "array",
+                                                            "nullable": true,
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "id": { "type": "string" },
+                                                                    "name": { "type": "string" },
+                                                                    "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
+                                                                },
+                                                                "required": ["id", "name", "type"]
                                                             }
                                                         }
                                                     },
-                                                    "required": [
-                                                        "id",
-                                                        "standardReferenceId",
-                                                        "sortId",
-                                                        "paperId",
-                                                        "sectionId",
-                                                        "partId",
-                                                        "paperTitle",
-                                                        "sectionTitle",
-                                                        "paragraphId",
-                                                        "text",
-                                                        "htmlText",
-                                                        "labels",
-                                                        "audio"
-                                                    ]
+                                                    "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
                                                 },
                                                 "before": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "object",
                                                         "properties": {
-                                                            "id": {
-                                                                "type": "string"
-                                                            },
-                                                            "standardReferenceId": {
-                                                                "type": "string"
-                                                            },
-                                                            "sortId": {
-                                                                "type": "string"
-                                                            },
-                                                            "paperId": {
-                                                                "type": "string"
-                                                            },
-                                                            "sectionId": {
-                                                                "type": "string",
-                                                                "nullable": true
-                                                            },
-                                                            "partId": {
-                                                                "type": "string"
-                                                            },
-                                                            "paperTitle": {
-                                                                "type": "string"
-                                                            },
-                                                            "sectionTitle": {
-                                                                "type": "string",
-                                                                "nullable": true
-                                                            },
-                                                            "paragraphId": {
-                                                                "type": "string"
-                                                            },
-                                                            "text": {
-                                                                "type": "string"
-                                                            },
-                                                            "htmlText": {
-                                                                "type": "string"
-                                                            },
-                                                            "labels": {
-                                                                "type": "array",
-                                                                "nullable": true,
-                                                                "items": {
-                                                                    "type": "string"
-                                                                }
-                                                            },
+                                                            "id": { "type": "string" },
+                                                            "standardReferenceId": { "type": "string" },
+                                                            "sortId": { "type": "string" },
+                                                            "paperId": { "type": "string" },
+                                                            "sectionId": { "type": "string", "nullable": true },
+                                                            "partId": { "type": "string" },
+                                                            "paperTitle": { "type": "string" },
+                                                            "sectionTitle": { "type": "string", "nullable": true },
+                                                            "paragraphId": { "type": "string" },
+                                                            "text": { "type": "string" },
+                                                            "htmlText": { "type": "string" },
+                                                            "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
                                                             "audio": {
                                                                 "type": "object",
                                                                 "nullable": true,
@@ -993,36 +622,28 @@
                                                                     "additionalProperties": {
                                                                         "type": "object",
                                                                         "properties": {
-                                                                            "format": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "url": {
-                                                                                "type": "string"
-                                                                            }
+                                                                            "format": { "type": "string" },
+                                                                            "url": { "type": "string" }
                                                                         },
-                                                                        "required": [
-                                                                            "format",
-                                                                            "url"
-                                                                        ]
+                                                                        "required": ["format", "url"]
                                                                     }
+                                                                }
+                                                            },
+                                                            "entities": {
+                                                                "type": "array",
+                                                                "nullable": true,
+                                                                "items": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "id": { "type": "string" },
+                                                                        "name": { "type": "string" },
+                                                                        "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
+                                                                    },
+                                                                    "required": ["id", "name", "type"]
                                                                 }
                                                             }
                                                         },
-                                                        "required": [
-                                                            "id",
-                                                            "standardReferenceId",
-                                                            "sortId",
-                                                            "paperId",
-                                                            "sectionId",
-                                                            "partId",
-                                                            "paperTitle",
-                                                            "sectionTitle",
-                                                            "paragraphId",
-                                                            "text",
-                                                            "htmlText",
-                                                            "labels",
-                                                            "audio"
-                                                        ]
+                                                        "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
                                                     }
                                                 },
                                                 "after": {
@@ -1030,48 +651,18 @@
                                                     "items": {
                                                         "type": "object",
                                                         "properties": {
-                                                            "id": {
-                                                                "type": "string"
-                                                            },
-                                                            "standardReferenceId": {
-                                                                "type": "string"
-                                                            },
-                                                            "sortId": {
-                                                                "type": "string"
-                                                            },
-                                                            "paperId": {
-                                                                "type": "string"
-                                                            },
-                                                            "sectionId": {
-                                                                "type": "string",
-                                                                "nullable": true
-                                                            },
-                                                            "partId": {
-                                                                "type": "string"
-                                                            },
-                                                            "paperTitle": {
-                                                                "type": "string"
-                                                            },
-                                                            "sectionTitle": {
-                                                                "type": "string",
-                                                                "nullable": true
-                                                            },
-                                                            "paragraphId": {
-                                                                "type": "string"
-                                                            },
-                                                            "text": {
-                                                                "type": "string"
-                                                            },
-                                                            "htmlText": {
-                                                                "type": "string"
-                                                            },
-                                                            "labels": {
-                                                                "type": "array",
-                                                                "nullable": true,
-                                                                "items": {
-                                                                    "type": "string"
-                                                                }
-                                                            },
+                                                            "id": { "type": "string" },
+                                                            "standardReferenceId": { "type": "string" },
+                                                            "sortId": { "type": "string" },
+                                                            "paperId": { "type": "string" },
+                                                            "sectionId": { "type": "string", "nullable": true },
+                                                            "partId": { "type": "string" },
+                                                            "paperTitle": { "type": "string" },
+                                                            "sectionTitle": { "type": "string", "nullable": true },
+                                                            "paragraphId": { "type": "string" },
+                                                            "text": { "type": "string" },
+                                                            "htmlText": { "type": "string" },
+                                                            "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
                                                             "audio": {
                                                                 "type": "object",
                                                                 "nullable": true,
@@ -1080,49 +671,35 @@
                                                                     "additionalProperties": {
                                                                         "type": "object",
                                                                         "properties": {
-                                                                            "format": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "url": {
-                                                                                "type": "string"
-                                                                            }
+                                                                            "format": { "type": "string" },
+                                                                            "url": { "type": "string" }
                                                                         },
-                                                                        "required": [
-                                                                            "format",
-                                                                            "url"
-                                                                        ]
+                                                                        "required": ["format", "url"]
                                                                     }
+                                                                }
+                                                            },
+                                                            "entities": {
+                                                                "type": "array",
+                                                                "nullable": true,
+                                                                "items": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "id": { "type": "string" },
+                                                                        "name": { "type": "string" },
+                                                                        "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
+                                                                    },
+                                                                    "required": ["id", "name", "type"]
                                                                 }
                                                             }
                                                         },
-                                                        "required": [
-                                                            "id",
-                                                            "standardReferenceId",
-                                                            "sortId",
-                                                            "paperId",
-                                                            "sectionId",
-                                                            "partId",
-                                                            "paperTitle",
-                                                            "sectionTitle",
-                                                            "paragraphId",
-                                                            "text",
-                                                            "htmlText",
-                                                            "labels",
-                                                            "audio"
-                                                        ]
+                                                        "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio"]
                                                     }
                                                 }
                                             },
-                                            "required": [
-                                                "target",
-                                                "before",
-                                                "after"
-                                            ]
+                                            "required": ["target", "before", "after"]
                                         }
                                     },
-                                    "required": [
-                                        "data"
-                                    ]
+                                    "required": ["data"]
                                 }
                             }
                         }
@@ -1134,13 +711,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -1152,13 +725,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -1170,13 +739,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -1187,9 +752,7 @@
         "/search": {
             "post": {
                 "operationId": "search",
-                "tags": [
-                    "Search"
-                ],
+                "tags": ["Search"],
                 "summary": "Full-text search across all paragraphs",
                 "description": "Search the Urantia Papers using full-text search. Supports three search modes:\n- **and**: All words must appear (default)\n- **or**: Any word can appear\n- **phrase**: Exact phrase match\n\nResults are ranked by relevance. Optional filters: paperId, partId.",
                 "requestBody": {
@@ -1198,41 +761,15 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "q": {
-                                        "type": "string",
-                                        "minLength": 1,
-                                        "maxLength": 500
-                                    },
-                                    "page": {
-                                        "type": "integer",
-                                        "minimum": 0,
-                                        "default": 0
-                                    },
-                                    "limit": {
-                                        "type": "integer",
-                                        "minimum": 1,
-                                        "maximum": 100,
-                                        "default": 20
-                                    },
-                                    "paperId": {
-                                        "type": "string"
-                                    },
-                                    "partId": {
-                                        "type": "string"
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "enum": [
-                                            "phrase",
-                                            "and",
-                                            "or"
-                                        ],
-                                        "default": "and"
-                                    }
+                                    "q": { "type": "string", "minLength": 1, "maxLength": 500 },
+                                    "page": { "type": "integer", "minimum": 0, "default": 0 },
+                                    "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 },
+                                    "paperId": { "type": "string" },
+                                    "partId": { "type": "string" },
+                                    "type": { "type": "string", "enum": ["phrase", "and", "or"], "default": "and" },
+                                    "include": { "type": "string" }
                                 },
-                                "required": [
-                                    "q"
-                                ]
+                                "required": ["q"]
                             }
                         }
                     }
@@ -1250,48 +787,18 @@
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
-                                                    "id": {
-                                                        "type": "string"
-                                                    },
-                                                    "standardReferenceId": {
-                                                        "type": "string"
-                                                    },
-                                                    "sortId": {
-                                                        "type": "string"
-                                                    },
-                                                    "paperId": {
-                                                        "type": "string"
-                                                    },
-                                                    "sectionId": {
-                                                        "type": "string",
-                                                        "nullable": true
-                                                    },
-                                                    "partId": {
-                                                        "type": "string"
-                                                    },
-                                                    "paperTitle": {
-                                                        "type": "string"
-                                                    },
-                                                    "sectionTitle": {
-                                                        "type": "string",
-                                                        "nullable": true
-                                                    },
-                                                    "paragraphId": {
-                                                        "type": "string"
-                                                    },
-                                                    "text": {
-                                                        "type": "string"
-                                                    },
-                                                    "htmlText": {
-                                                        "type": "string"
-                                                    },
-                                                    "labels": {
-                                                        "type": "array",
-                                                        "nullable": true,
-                                                        "items": {
-                                                            "type": "string"
-                                                        }
-                                                    },
+                                                    "id": { "type": "string" },
+                                                    "standardReferenceId": { "type": "string" },
+                                                    "sortId": { "type": "string" },
+                                                    "paperId": { "type": "string" },
+                                                    "sectionId": { "type": "string", "nullable": true },
+                                                    "partId": { "type": "string" },
+                                                    "paperTitle": { "type": "string" },
+                                                    "sectionTitle": { "type": "string", "nullable": true },
+                                                    "paragraphId": { "type": "string" },
+                                                    "text": { "type": "string" },
+                                                    "htmlText": { "type": "string" },
+                                                    "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
                                                     "audio": {
                                                         "type": "object",
                                                         "nullable": true,
@@ -1300,70 +807,43 @@
                                                             "additionalProperties": {
                                                                 "type": "object",
                                                                 "properties": {
-                                                                    "format": {
-                                                                        "type": "string"
-                                                                    },
-                                                                    "url": {
-                                                                        "type": "string"
-                                                                    }
+                                                                    "format": { "type": "string" },
+                                                                    "url": { "type": "string" }
                                                                 },
-                                                                "required": [
-                                                                    "format",
-                                                                    "url"
-                                                                ]
+                                                                "required": ["format", "url"]
                                                             }
                                                         }
                                                     },
-                                                    "rank": {
-                                                        "type": "number"
-                                                    }
+                                                    "entities": {
+                                                        "type": "array",
+                                                        "nullable": true,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "id": { "type": "string" },
+                                                                "name": { "type": "string" },
+                                                                "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
+                                                            },
+                                                            "required": ["id", "name", "type"]
+                                                        }
+                                                    },
+                                                    "rank": { "type": "number" }
                                                 },
-                                                "required": [
-                                                    "id",
-                                                    "standardReferenceId",
-                                                    "sortId",
-                                                    "paperId",
-                                                    "sectionId",
-                                                    "partId",
-                                                    "paperTitle",
-                                                    "sectionTitle",
-                                                    "paragraphId",
-                                                    "text",
-                                                    "htmlText",
-                                                    "labels",
-                                                    "audio",
-                                                    "rank"
-                                                ]
+                                                "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio", "rank"]
                                             }
                                         },
                                         "meta": {
                                             "type": "object",
                                             "properties": {
-                                                "page": {
-                                                    "type": "integer"
-                                                },
-                                                "limit": {
-                                                    "type": "integer"
-                                                },
-                                                "total": {
-                                                    "type": "integer"
-                                                },
-                                                "totalPages": {
-                                                    "type": "integer"
-                                                }
+                                                "page": { "type": "integer" },
+                                                "limit": { "type": "integer" },
+                                                "total": { "type": "integer" },
+                                                "totalPages": { "type": "integer" }
                                             },
-                                            "required": [
-                                                "page",
-                                                "limit",
-                                                "total",
-                                                "totalPages"
-                                            ]
+                                            "required": ["page", "limit", "total", "totalPages"]
                                         }
                                     },
-                                    "required": [
-                                        "data",
-                                        "meta"
-                                    ]
+                                    "required": ["data", "meta"]
                                 }
                             }
                         }
@@ -1375,13 +855,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -1393,13 +869,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -1410,9 +882,7 @@
         "/search/semantic": {
             "post": {
                 "operationId": "semanticSearch",
-                "tags": [
-                    "Search"
-                ],
+                "tags": ["Search"],
                 "summary": "Semantic similarity search across all paragraphs",
                 "description": "Search the Urantia Papers using semantic similarity (vector embeddings).\nReturns conceptually related results even without exact keyword matches.\nOptional filters: paperId, partId.",
                 "requestBody": {
@@ -1421,32 +891,14 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "q": {
-                                        "type": "string",
-                                        "minLength": 1,
-                                        "maxLength": 500
-                                    },
-                                    "page": {
-                                        "type": "integer",
-                                        "minimum": 0,
-                                        "default": 0
-                                    },
-                                    "limit": {
-                                        "type": "integer",
-                                        "minimum": 1,
-                                        "maximum": 100,
-                                        "default": 20
-                                    },
-                                    "paperId": {
-                                        "type": "string"
-                                    },
-                                    "partId": {
-                                        "type": "string"
-                                    }
+                                    "q": { "type": "string", "minLength": 1, "maxLength": 500 },
+                                    "page": { "type": "integer", "minimum": 0, "default": 0 },
+                                    "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 },
+                                    "paperId": { "type": "string" },
+                                    "partId": { "type": "string" },
+                                    "include": { "type": "string" }
                                 },
-                                "required": [
-                                    "q"
-                                ]
+                                "required": ["q"]
                             }
                         }
                     }
@@ -1464,48 +916,18 @@
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
-                                                    "id": {
-                                                        "type": "string"
-                                                    },
-                                                    "standardReferenceId": {
-                                                        "type": "string"
-                                                    },
-                                                    "sortId": {
-                                                        "type": "string"
-                                                    },
-                                                    "paperId": {
-                                                        "type": "string"
-                                                    },
-                                                    "sectionId": {
-                                                        "type": "string",
-                                                        "nullable": true
-                                                    },
-                                                    "partId": {
-                                                        "type": "string"
-                                                    },
-                                                    "paperTitle": {
-                                                        "type": "string"
-                                                    },
-                                                    "sectionTitle": {
-                                                        "type": "string",
-                                                        "nullable": true
-                                                    },
-                                                    "paragraphId": {
-                                                        "type": "string"
-                                                    },
-                                                    "text": {
-                                                        "type": "string"
-                                                    },
-                                                    "htmlText": {
-                                                        "type": "string"
-                                                    },
-                                                    "labels": {
-                                                        "type": "array",
-                                                        "nullable": true,
-                                                        "items": {
-                                                            "type": "string"
-                                                        }
-                                                    },
+                                                    "id": { "type": "string" },
+                                                    "standardReferenceId": { "type": "string" },
+                                                    "sortId": { "type": "string" },
+                                                    "paperId": { "type": "string" },
+                                                    "sectionId": { "type": "string", "nullable": true },
+                                                    "partId": { "type": "string" },
+                                                    "paperTitle": { "type": "string" },
+                                                    "sectionTitle": { "type": "string", "nullable": true },
+                                                    "paragraphId": { "type": "string" },
+                                                    "text": { "type": "string" },
+                                                    "htmlText": { "type": "string" },
+                                                    "labels": { "type": "array", "nullable": true, "items": { "type": "string" } },
                                                     "audio": {
                                                         "type": "object",
                                                         "nullable": true,
@@ -1514,70 +936,43 @@
                                                             "additionalProperties": {
                                                                 "type": "object",
                                                                 "properties": {
-                                                                    "format": {
-                                                                        "type": "string"
-                                                                    },
-                                                                    "url": {
-                                                                        "type": "string"
-                                                                    }
+                                                                    "format": { "type": "string" },
+                                                                    "url": { "type": "string" }
                                                                 },
-                                                                "required": [
-                                                                    "format",
-                                                                    "url"
-                                                                ]
+                                                                "required": ["format", "url"]
                                                             }
                                                         }
                                                     },
-                                                    "similarity": {
-                                                        "type": "number"
-                                                    }
+                                                    "entities": {
+                                                        "type": "array",
+                                                        "nullable": true,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "id": { "type": "string" },
+                                                                "name": { "type": "string" },
+                                                                "type": { "type": "string", "enum": ["being", "place", "order", "race", "religion", "concept"] }
+                                                            },
+                                                            "required": ["id", "name", "type"]
+                                                        }
+                                                    },
+                                                    "similarity": { "type": "number" }
                                                 },
-                                                "required": [
-                                                    "id",
-                                                    "standardReferenceId",
-                                                    "sortId",
-                                                    "paperId",
-                                                    "sectionId",
-                                                    "partId",
-                                                    "paperTitle",
-                                                    "sectionTitle",
-                                                    "paragraphId",
-                                                    "text",
-                                                    "htmlText",
-                                                    "labels",
-                                                    "audio",
-                                                    "similarity"
-                                                ]
+                                                "required": ["id", "standardReferenceId", "sortId", "paperId", "sectionId", "partId", "paperTitle", "sectionTitle", "paragraphId", "text", "htmlText", "labels", "audio", "similarity"]
                                             }
                                         },
                                         "meta": {
                                             "type": "object",
                                             "properties": {
-                                                "page": {
-                                                    "type": "integer"
-                                                },
-                                                "limit": {
-                                                    "type": "integer"
-                                                },
-                                                "total": {
-                                                    "type": "integer"
-                                                },
-                                                "totalPages": {
-                                                    "type": "integer"
-                                                }
+                                                "page": { "type": "integer" },
+                                                "limit": { "type": "integer" },
+                                                "total": { "type": "integer" },
+                                                "totalPages": { "type": "integer" }
                                             },
-                                            "required": [
-                                                "page",
-                                                "limit",
-                                                "total",
-                                                "totalPages"
-                                            ]
+                                            "required": ["page", "limit", "total", "totalPages"]
                                         }
                                     },
-                                    "required": [
-                                        "data",
-                                        "meta"
-                                    ]
+                                    "required": ["data", "meta"]
                                 }
                             }
                         }
@@ -1589,13 +984,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -1607,13 +998,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -1624,20 +1011,11 @@
         "/audio/{paragraphId}": {
             "get": {
                 "operationId": "getAudio",
-                "tags": [
-                    "Audio"
-                ],
+                "tags": ["Audio"],
                 "summary": "Get audio URL for a paragraph",
                 "description": "Returns the audio file URL for a given paragraph. Accepts any paragraph reference format (globalId, standardReferenceId, or paperSectionParagraphId).",
                 "parameters": [
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "required": true,
-                        "name": "paragraphId",
-                        "in": "path"
-                    }
+                    { "schema": { "type": "string" }, "required": true, "name": "paragraphId", "in": "path" }
                 ],
                 "responses": {
                     "200": {
@@ -1650,9 +1028,7 @@
                                         "data": {
                                             "type": "object",
                                             "properties": {
-                                                "paragraphId": {
-                                                    "type": "string"
-                                                },
+                                                "paragraphId": { "type": "string" },
                                                 "audio": {
                                                     "type": "object",
                                                     "nullable": true,
@@ -1661,30 +1037,18 @@
                                                         "additionalProperties": {
                                                             "type": "object",
                                                             "properties": {
-                                                                "format": {
-                                                                    "type": "string"
-                                                                },
-                                                                "url": {
-                                                                    "type": "string"
-                                                                }
+                                                                "format": { "type": "string" },
+                                                                "url": { "type": "string" }
                                                             },
-                                                            "required": [
-                                                                "format",
-                                                                "url"
-                                                            ]
+                                                            "required": ["format", "url"]
                                                         }
                                                     }
                                                 }
                                             },
-                                            "required": [
-                                                "paragraphId",
-                                                "audio"
-                                            ]
+                                            "required": ["paragraphId", "audio"]
                                         }
                                     },
-                                    "required": [
-                                        "data"
-                                    ]
+                                    "required": ["data"]
                                 }
                             }
                         }
@@ -1696,13 +1060,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }
@@ -1714,13 +1074,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
+                                        "error": { "type": "string" }
                                     },
-                                    "required": [
-                                        "error"
-                                    ]
+                                    "required": ["error"]
                                 }
                             }
                         }

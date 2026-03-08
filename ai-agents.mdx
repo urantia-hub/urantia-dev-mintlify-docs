@@ -51,6 +51,20 @@ curl -X POST https://api.urantia.dev/search/semantic \
 
 Both search endpoints support `paperId` and `partId` filters to narrow scope.
 
+## Entity lookup
+
+The API catalogs 4,400+ named entities — beings, places, orders, races, religions, and concepts — with descriptions and cross-references.
+
+Use `GET /entities?q=<name>` to find entities by name, or `GET /entities?type=being` to browse by type. Each entity includes a `citationCount` showing how often it appears.
+
+To find every paragraph that mentions an entity:
+
+```bash
+curl https://api.urantia.dev/entities/thought-adjusters/paragraphs
+```
+
+This is useful for building knowledge graphs, entity-aware RAG, or letting users explore topics by entity.
+
 ## Context window
 
 The `/paragraphs/:ref/context` endpoint is particularly useful for RAG. It returns the target paragraph plus surrounding paragraphs (configurable via the `window` parameter, 1-10).

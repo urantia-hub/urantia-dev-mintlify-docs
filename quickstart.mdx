@@ -42,6 +42,22 @@ curl "https://api.urantia.dev/paragraphs/1:2.0.1/context?window=3"
 
 Returns the target paragraph plus 3 paragraphs before and after it — useful for RAG and AI applications.
 
+## Browse entities
+
+The API includes 4,400+ entities (beings, places, orders, races, religions, concepts) sourced from the Urantiapedia knowledge graph.
+
+```bash
+# List entities, optionally filter by type or search by name
+curl "https://api.urantia.dev/entities?type=being&limit=5"
+curl "https://api.urantia.dev/entities?q=adam"
+
+# Get a single entity
+curl https://api.urantia.dev/entities/adam-and-eve
+
+# Get all paragraphs that mention an entity
+curl https://api.urantia.dev/entities/adam-and-eve/paragraphs
+```
+
 ## Read a full paper
 
 ```bash
