@@ -1,0 +1,134 @@
+---
+title: "CDN & Static Assets"
+sidebarTitle: "CDN"
+description: "Access static JSON, audio, entities, and embeddings from audio.urantia.dev — the Cloudflare R2-backed CDN powering the Urantia Papers API."
+---
+
+All static data that powers the API is available directly from a public Cloudflare R2 bucket at `audio.urantia.dev`. You can use these files for offline apps, custom pipelines, or self-hosted setups.
+
+## What's available
+
+| Asset | Format | Count | Description |
+|-------|--------|-------|-------------|
+| Papers | JSON | 197 | Full paper text with paragraphs, sections, and metadata |
+| Paper audio | MP3 | 197 | Full narration of each paper |
+| Paragraph audio | MP3 | 16,000+ | Individual paragraph narration across 6 voices |
+| Entities | JSON | 3,000+ | Typed entities (beings, places, concepts) with descriptions |
+| Entity links | JSON | 50,000+ | Paragraph-to-entity citation mappings |
+| Embeddings | JSON | 14,500+ | OpenAI `text-embedding-3-small` vectors (1536-dimensional) |
+| Audio manifest | JSON | 1 | Complete inventory mapping paragraph IDs to audio URLs |
+
+## URL patterns
+
+### Audio files
+
+Paragraph-level audio follows this naming pattern:
+
+```
+https://audio.urantia.dev/{model}-{voice}-{globalId}.mp3
+```
+
+**Examples:**
+
+```bash
+# tts-1-hd model, nova voice, paragraph 0:0.0.1 (Foreword, first paragraph)
+https://audio.urantia.dev/tts-1-hd-nova-0:0.0.1.mp3
+
+# tts-1-hd model, echo voice, paragraph 3:119.1.5
+https://audio.urantia.dev/tts-1-hd-echo-3:119.1.5.mp3
+
+# Whole paper audio (Paper 1)
+https://audio.urantia.dev/1.mp3
+```
+
+**Available voices:**
+
+| Model | Voices | Coverage |
+|-------|--------|----------|
+| `tts-1-hd` | `nova`, `echo`, `onyx`, `alloy`, `fable`, `shimmer` | `nova` has full coverage |
+| `tts-1` | `alloy` | Partial |
+
+### JSON files
+
+Paper JSON files are numbered `000.json` through `196.json`:
+
+```bash
+# Foreword
+https://audio.urantia.dev/json/eng/000.json
+
+# Paper 1 — The Universal Father
+https://audio.urantia.dev/json/eng/001.json
+
+# Paper index (all papers, sections, paragraphs)
+https://audio.urantia.dev/json/eng/index.json
+
+# Part metadata
+https://audio.urantia.dev/json/eng/1-part.json
+```
+
+### Entities
+
+```bash
+# All entities with descriptions, aliases, and types
+https://audio.urantia.dev/entities/seed-entities.json
+
+# Paragraph-to-entity citation mappings
+https://audio.urantia.dev/entities/paragraph-entities.json
+```
+
+### Embeddings
+
+```bash
+# All paragraph embeddings (OpenAI text-embedding-3-small, 1536 dimensions)
+https://audio.urantia.dev/embeddings/embeddings.json
+```
+
+<Warning>
+The embeddings file is ~455 MB. Only download it if you need vector search capabilities for a self-hosted setup.
+</Warning>
+
+### Audio manifest
+
+```bash
+# Complete mapping of paragraph IDs to audio CDN URLs
+https://audio.urantia.dev/manifests/audio-manifest.json
+```
+
+## Paper JSON structure
+
+Each paper file contains the full text with structured metadata:
+
+```json
+{
+  "paperId": "1",
+  "paperTitle": "The Universal Father",
+  "partId": "1",
+  "sections": [
+    {
+      "sectionId": "0",
+      "sectionTitle": "",
+      "paragraphs": [
+        {
+          "globalId": "1:1.0.1",
+          "standardReferenceId": "1:0.1",
+          "paperSectionParagraphId": "1.0.1",
+          "text": "THE Universal Father is the God of all creation...",
+          "htmlText": "<p>THE Universal Father is the God of all creation...</p>"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Use cases
+
+- **Offline apps** — Download the JSON files and audio for offline reading and listening
+- **Custom search** — Use the embeddings to build your own vector search
+- **Self-hosted API** — Seed your own database from the source JSON and entities
+- **Data analysis** — Analyze entity relationships, citation patterns, or text embeddings
+- **Alternative TTS** — Use the text data to generate audio with other TTS providers
+
+<Tip>
+For most use cases, the [API](/api-reference/introduction) is easier than working with raw files. Use the CDN when you need bulk access or offline capabilities.
+</Tip>

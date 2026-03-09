@@ -22,7 +22,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["index", "quickstart", "audio", "entities"]
+            "pages": ["index", "quickstart", "audio", "entities", "cdn"]
           },
           {
             "group": "For AI Agents",
