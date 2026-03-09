@@ -1,0 +1,71 @@
+---
+title: "Papers & Sections"
+sidebarTitle: "Papers"
+description: "Access all 197 papers and 1,626 sections of the Urantia Book through the API. Organized into 4 parts with full table of contents."
+---
+
+The Urantia Book is structured as **197 papers** organized into **4 parts**, with the Foreword as Paper 0. Each paper contains numbered sections, and each section contains numbered paragraphs.
+
+## Structure
+
+| Level | Count | Description |
+|-------|-------|-------------|
+| Parts | 4 | Major divisions of the book |
+| Papers | 197 | Individual papers (0 = Foreword) |
+| Sections | 1,626 | Subdivisions within papers |
+| Paragraphs | 14,500+ | Atomic content units |
+
+## Table of contents
+
+Get the full hierarchical structure in a single call:
+
+```bash
+curl https://api.urantia.dev/toc
+```
+
+Returns all parts with their papers nested inside — useful for building navigation.
+
+## List all papers
+
+```bash
+curl https://api.urantia.dev/papers
+```
+
+Returns metadata for all 197 papers including title, part, and section count.
+
+## Read a paper
+
+```bash
+# Get Paper 1 — The Universal Father
+curl https://api.urantia.dev/papers/1
+```
+
+Returns the full paper with all paragraphs. Each paragraph includes `text`, `htmlText`, `standardReferenceId`, audio URLs, and optional entity mentions.
+
+Add `?include=entities` to get entity annotations on every paragraph:
+
+```bash
+curl https://api.urantia.dev/papers/1?include=entities
+```
+
+## Get sections
+
+```bash
+# Get sections for Paper 1
+curl https://api.urantia.dev/papers/1/sections
+```
+
+Returns the section breakdown for a paper — useful for building section-level navigation.
+
+## The 4 parts
+
+| Part | Papers | Topic |
+|------|--------|-------|
+| I | 1–31 | The Central and Superuniverses |
+| II | 32–56 | The Local Universe |
+| III | 57–119 | The History of Urantia |
+| IV | 120–196 | The Life and Teachings of Jesus |
+
+<Card title="API Reference — Papers" icon="terminal" href="/api-reference/endpoint/list-papers">
+  See the full endpoint documentation with interactive examples.
+</Card>

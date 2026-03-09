@@ -22,15 +22,19 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["index", "quickstart", "audio", "entities", "cdn"]
+            "pages": ["index", "quickstart", "use-cases"]
           },
           {
-            "group": "For AI Agents",
+            "group": "Data",
+            "pages": ["papers", "paragraphs", "entities", "audio", "cdn"]
+          },
+          {
+            "group": "Integrations",
             "pages": ["ai-agents"]
           },
           {
             "group": "More",
-            "pages": ["use-cases", "support"]
+            "pages": ["support"]
           }
         ]
       },

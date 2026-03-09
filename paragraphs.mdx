@@ -1,0 +1,87 @@
+---
+title: "Paragraphs & References"
+sidebarTitle: "Paragraphs"
+description: "Access individual paragraphs with three reference formats, context windows, and entity enrichment."
+---
+
+Paragraphs are the atomic content units of the Urantia Papers. Each one has a unique reference, full text, HTML rendering, optional audio, and optional entity mentions.
+
+## Reference formats
+
+The API accepts three formats for identifying a paragraph — all auto-detected:
+
+| Format | Example | Pattern |
+|--------|---------|---------|
+| Standard reference | `2:0.1` | paperId:sectionId.paragraphId |
+| Paper.section.paragraph | `2.0.1` | paperId.sectionId.paragraphId |
+| Global ID | `1:2.0.1` | partId:paperId.sectionId.paragraphId |
+
+Use whichever is most natural for your use case. The standard reference (`2:0.1`) is the most common in Urantia Book study.
+
+## Get a paragraph
+
+```bash
+# Using standard reference
+curl https://api.urantia.dev/paragraphs/2:0.1
+
+# Same paragraph, different format
+curl https://api.urantia.dev/paragraphs/2.0.1
+```
+
+## Get a random paragraph
+
+```bash
+curl https://api.urantia.dev/paragraphs/random
+```
+
+Returns a single random paragraph — great for daily quotes, inspiration widgets, or testing.
+
+## Context window
+
+Retrieve a paragraph with its surrounding context:
+
+```bash
+# Get paragraph with 3 paragraphs before and after
+curl https://api.urantia.dev/paragraphs/2:0.1/context?window=3
+```
+
+Returns `target` (the requested paragraph), `before` (preceding paragraphs), and `after` (following paragraphs). The `window` parameter accepts 1–10.
+
+This is especially useful for RAG applications where an LLM needs surrounding context to give accurate answers.
+
+## Entity enrichment
+
+Add `?include=entities` to get typed entity mentions on any paragraph:
+
+```bash
+curl https://api.urantia.dev/paragraphs/2:0.1?include=entities
+```
+
+Each entity includes `id`, `name`, and `type` (being, place, order, race, religion, or concept).
+
+## Response shape
+
+```json
+{
+  "data": {
+    "id": "1:2.0.1",
+    "standardReferenceId": "2:0.1",
+    "paperId": "2",
+    "paperTitle": "The Nature of God",
+    "sectionId": "0",
+    "sectionTitle": "",
+    "paragraphId": "1",
+    "text": "Your Father in heaven, by endowing you with...",
+    "htmlText": "<p>Your Father in heaven, by endowing you with...</p>",
+    "audio": {
+      "tts-1-hd": {
+        "nova": { "format": "mp3", "url": "https://audio.urantia.dev/..." }
+      }
+    }
+  }
+}
+```
+
+<Card title="API Reference — Paragraphs" icon="terminal" href="/api-reference/endpoint/get-paragraph">
+  See the full endpoint documentation with interactive examples.
+</Card>
