@@ -178,11 +178,6 @@
           "anchor": "Status",
           "href": "https://status.urantia.dev",
           "icon": "signal"
-        },
-        {
-          "anchor": "Support",
-          "href": "/support",
-          "icon": "heart"
         }
       ]
     }
