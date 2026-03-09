@@ -30,7 +30,7 @@
           },
           {
             "group": "More",
-            "pages": ["use-cases"]
+            "pages": ["use-cases", "support"]
           }
         ]
       },
@@ -178,6 +178,11 @@
           "anchor": "Status",
           "href": "https://status.urantia.dev",
           "icon": "signal"
+        },
+        {
+          "anchor": "Support",
+          "href": "/support",
+          "icon": "heart"
         }
       ]
     }
