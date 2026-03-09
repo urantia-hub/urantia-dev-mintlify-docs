@@ -1,10 +1,10 @@
 ---
 title: "CDN & Static Assets"
 sidebarTitle: "CDN"
-description: "Access static JSON, audio, entities, and embeddings from audio.urantia.dev — the Cloudflare R2-backed CDN powering the Urantia Papers API."
+description: "Access static JSON, audio, entities, and embeddings from cdn.urantia.dev — the Cloudflare R2-backed CDN powering the Urantia Papers API."
 ---
 
-All static data that powers the API is available directly from a public Cloudflare R2 bucket at `audio.urantia.dev`. You can use these files for offline apps, custom pipelines, or self-hosted setups.
+All static data that powers the API is available directly from a public Cloudflare R2 bucket at `cdn.urantia.dev`. Audio files are served from a separate subdomain at `audio.urantia.dev`. You can use these files for offline apps, custom pipelines, or self-hosted setups.
 
 ## What's available
 
@@ -54,33 +54,33 @@ Paper JSON files are numbered `000.json` through `196.json`:
 
 ```bash
 # Foreword
-https://audio.urantia.dev/json/eng/000.json
+https://cdn.urantia.dev/json/eng/000.json
 
 # Paper 1 — The Universal Father
-https://audio.urantia.dev/json/eng/001.json
+https://cdn.urantia.dev/json/eng/001.json
 
 # Paper index (all papers, sections, paragraphs)
-https://audio.urantia.dev/json/eng/index.json
+https://cdn.urantia.dev/json/eng/index.json
 
 # Part metadata
-https://audio.urantia.dev/json/eng/1-part.json
+https://cdn.urantia.dev/json/eng/1-part.json
 ```
 
 ### Entities
 
 ```bash
 # All entities with descriptions, aliases, and types
-https://audio.urantia.dev/entities/seed-entities.json
+https://cdn.urantia.dev/entities/seed-entities.json
 
 # Paragraph-to-entity citation mappings
-https://audio.urantia.dev/entities/paragraph-entities.json
+https://cdn.urantia.dev/entities/paragraph-entities.json
 ```
 
 ### Embeddings
 
 ```bash
 # All paragraph embeddings (OpenAI text-embedding-3-small, 1536 dimensions)
-https://audio.urantia.dev/embeddings/embeddings.json
+https://cdn.urantia.dev/embeddings/embeddings.json
 ```
 
 <Warning>
@@ -91,7 +91,7 @@ The embeddings file is ~455 MB. Only download it if you need vector search capab
 
 ```bash
 # Complete mapping of paragraph IDs to audio CDN URLs
-https://audio.urantia.dev/manifests/audio-manifest.json
+https://cdn.urantia.dev/manifests/audio-manifest.json
 ```
 
 ## Paper JSON structure
