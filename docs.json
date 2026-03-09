@@ -160,24 +160,14 @@
     "global": {
       "anchors": [
         {
-          "anchor": "API",
-          "href": "https://api.urantia.dev",
-          "icon": "bolt"
-        },
-        {
-          "anchor": "OpenAPI Spec",
-          "href": "https://api.urantia.dev/openapi.json",
-          "icon": "code"
+          "anchor": "Interactive Demo",
+          "href": "https://demo.urantia.dev",
+          "icon": "play"
         },
         {
           "anchor": "Read the Papers",
           "href": "https://urantiahub.com",
           "icon": "book-open"
-        },
-        {
-          "anchor": "Status",
-          "href": "https://status.urantia.dev",
-          "icon": "signal"
         }
       ]
     }
@@ -192,7 +182,8 @@
   "openapi": "api-reference/openapi.json",
   "footer": {
     "socials": {
-      "github": "https://github.com/kelsonic"
+      "github": "https://github.com/kelsonic",
+      "website": "https://status.urantia.dev"
     }
   }
 }
