@@ -54,6 +54,18 @@ Three formats are auto-detected:
 
 Every paragraph has audio narration. Models: tts-1-hd, tts-1. Voices: nova, echo, onyx, alloy, fable, shimmer. Full coverage with tts-1-hd/nova. Audio served from audio.urantia.dev via Cloudflare CDN.
 
+## MCP Server
+
+The API includes a built-in MCP (Model Context Protocol) server for AI agents:
+
+https://api.urantia.dev/mcp
+
+Add to any MCP-compatible client (Claude Desktop, Cursor, Claude Code, Windsurf):
+
+{"mcpServers":{"urantia-papers":{"url":"https://api.urantia.dev/mcp"}}}
+
+Exposes 13 tools: get_table_of_contents, list_papers, get_paper, get_paper_sections, get_random_paragraph, get_paragraph, get_paragraph_context, search, semantic_search, list_entities, get_entity, get_entity_paragraphs, get_audio. No API key required. Uses Streamable HTTP transport.
+
 ## OpenAPI Specification
 
 https://api.urantia.dev/openapi.json

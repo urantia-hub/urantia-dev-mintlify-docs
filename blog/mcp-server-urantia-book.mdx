@@ -6,6 +6,10 @@ description: "Learn how to build a Model Context Protocol (MCP) server that give
 
 The Model Context Protocol (MCP) lets AI assistants access external data sources through a standardized interface. This guide shows how to build an MCP server that gives Claude (and other MCP-compatible assistants) the ability to search and read the Urantia Book.
 
+<Info>
+**Want instant access without building anything?** The API now includes a [built-in MCP server](/mcp) with 13 tools at `api.urantia.dev/mcp`. Add it to Claude Desktop or any MCP client in one line. This tutorial is for building a **custom** MCP server with your own logic.
+</Info>
+
 ## What Is MCP?
 
 MCP (Model Context Protocol) is an open standard created by Anthropic that allows AI models to interact with external tools and data sources. Instead of relying solely on training data, an AI assistant with MCP access can query live APIs, read files, and perform actions.

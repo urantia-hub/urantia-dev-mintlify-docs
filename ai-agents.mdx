@@ -79,13 +79,27 @@ This provides the LLM with the narrative flow around a passage, which leads to m
 
 ## MCP Server
 
-Mintlify provides a hosted MCP (Model Context Protocol) server for these docs at:
+The API includes a built-in MCP server that exposes all 13 endpoints as tools — no setup, no API key, no local process:
 
-```
-https://urantia.dev/mcp
+```json
+{
+  "mcpServers": {
+    "urantia-papers": {
+      "url": "https://api.urantia.dev/mcp"
+    }
+  }
+}
 ```
 
-You can add it to Claude Desktop or any MCP-compatible client:
+Add this to Claude Desktop, Cursor, Claude Code, or any Streamable HTTP MCP client. Your agent gets 13 tools: search, semantic search, paragraphs, papers, entities, audio, and more.
+
+<Card title="MCP Server Guide" icon="plug" href="/mcp">
+  Full setup instructions, tool reference, and example prompts.
+</Card>
+
+### Docs MCP Server
+
+Mintlify also provides a separate MCP server for searching these docs:
 
 ```json
 {
@@ -98,13 +112,7 @@ You can add it to Claude Desktop or any MCP-compatible client:
 }
 ```
 
-This gives your AI agent a `SearchUrantiaDev` tool that searches the documentation site — useful for discovering available endpoints and usage patterns. Note that this searches the *docs*, not the API itself.
-
-For full API access (search, entities, paragraphs, etc.), you'll want to build a custom MCP server that calls the API endpoints directly. See the [Build an MCP Server](/blog/build-urantia-book-mcp-server) tutorial for a step-by-step guide.
-
-<Info>
-A full MCP server exposing all API endpoints as tools is on the long-term roadmap.
-</Info>
+This gives your agent a `SearchUrantiaDev` tool for discovering endpoints and usage patterns. Use the **API MCP server** (`api.urantia.dev/mcp`) for actual data access, and the **docs MCP server** (`urantia.dev/mcp`) for learning how to use the API.
 
 ## OpenAPI spec
 

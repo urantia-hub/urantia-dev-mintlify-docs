@@ -1,0 +1,143 @@
+---
+title: "MCP Server - Give AI Agents Direct API Access"
+sidebarTitle: "MCP Server"
+description: "Connect Claude Desktop, Cursor, Windsurf, and other AI agents to the Urantia Papers API via MCP. 13 tools for search, paragraphs, entities, and audio — zero setup."
+---
+
+The Urantia Papers API includes a built-in [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that exposes all 13 API endpoints as tools any AI agent can use natively.
+
+```
+https://api.urantia.dev/mcp
+```
+
+<Note>
+This is the **API MCP server** — it gives agents direct access to search, paragraphs, entities, and audio data. For searching these docs, use the separate [docs MCP server](/ai-agents#docs-mcp-server) at `urantia.dev/mcp`.
+</Note>
+
+## Setup
+
+Add the server to your MCP client config. No API key, no installation, no build step.
+
+<Tabs>
+  <Tab title="Claude Desktop">
+    Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+
+    ```json
+    {
+      "mcpServers": {
+        "urantia-papers": {
+          "url": "https://api.urantia.dev/mcp"
+        }
+      }
+    }
+    ```
+
+    Restart Claude Desktop. You'll see 13 tools available.
+  </Tab>
+  <Tab title="Claude Code">
+    Add to `.mcp.json` in your project root:
+
+    ```json
+    {
+      "mcpServers": {
+        "urantia-papers": {
+          "url": "https://api.urantia.dev/mcp"
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Cursor / Windsurf">
+    Add to your MCP settings:
+
+    ```json
+    {
+      "mcpServers": {
+        "urantia-papers": {
+          "url": "https://api.urantia.dev/mcp"
+        }
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+Works with any client that supports [MCP Streamable HTTP transport](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http).
+
+## Available Tools
+
+The MCP server exposes 13 tools, one for each API endpoint:
+
+### Structure & Navigation
+
+| Tool | Description |
+|------|-------------|
+| `get_table_of_contents` | Get the full table of contents — all 4 parts and 197 papers. Best starting point. |
+| `list_papers` | List all 197 papers with metadata (id, title, partId, labels). |
+| `get_paper` | Get a single paper with all its paragraphs. Supports `include_entities`. |
+| `get_paper_sections` | Get all sections within a paper, ordered by section number. |
+
+### Paragraphs
+
+| Tool | Description |
+|------|-------------|
+| `get_paragraph` | Look up a paragraph by reference. Supports 3 formats: `"1:2.0.1"`, `"2:0.1"`, `"2.0.1"`. |
+| `get_paragraph_context` | Get a paragraph with N paragraphs before and after (configurable `window`, 1-10). |
+| `get_random_paragraph` | Get a random paragraph. Great for exploration. |
+
+### Search
+
+| Tool | Description |
+|------|-------------|
+| `search` | Full-text search. Modes: `and` (default), `or`, `phrase`. Filters: `paper_id`, `part_id`. |
+| `semantic_search` | Semantic similarity search via vector embeddings. Finds conceptually related passages. |
+
+### Entities
+
+| Tool | Description |
+|------|-------------|
+| `list_entities` | Browse 4,400+ entities (beings, places, orders, races, religions, concepts). Filter by `type` or search by `q`. |
+| `get_entity` | Get entity details: name, type, aliases, description, related entities, citation count. |
+| `get_entity_paragraphs` | Get all paragraphs that mention a specific entity. |
+
+### Audio
+
+| Tool | Description |
+|------|-------------|
+| `get_audio` | Get audio file URLs for a paragraph. Accepts any reference format. |
+
+## Example Prompts
+
+Once connected, try asking your AI agent:
+
+- **"Search the Urantia Book for passages about love"** — uses `search`
+- **"What does the Urantia Book say about what happens after death?"** — uses `semantic_search`
+- **"Read Paper 1 about the Universal Father"** — uses `get_paper`
+- **"Show me paragraph 2:5.10 with surrounding context"** — uses `get_paragraph_context`
+- **"Find all entities of type 'place'"** — uses `list_entities`
+- **"What entities are mentioned in paragraph 0:0.1?"** — uses `get_paragraph` with `include_entities`
+
+## How It Works
+
+The MCP server uses [Streamable HTTP transport](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http), which means:
+
+- **No local process** — it runs on the same Cloudflare Worker as the API
+- **Stateless** — each request creates a fresh server instance (no sessions to manage)
+- **Same rate limits** as the REST API (100 requests/minute per IP)
+- **Same data** — MCP tools query the database directly, returning the same results as the REST endpoints
+
+## MCP vs REST
+
+Both give you access to the same data. Choose based on your use case:
+
+| | MCP (`api.urantia.dev/mcp`) | REST (`api.urantia.dev/*`) |
+|---|---|---|
+| **Best for** | AI agents (Claude, Cursor, etc.) | Apps, scripts, manual exploration |
+| **Protocol** | JSON-RPC over Streamable HTTP | Standard HTTP |
+| **Auth** | None | None |
+| **Tools/Endpoints** | 13 tools | 13 endpoints |
+| **Response format** | MCP content blocks | JSON with `data`/`meta` wrappers |
+
+## Building a Custom MCP Server
+
+If you need custom logic (e.g., combining multiple tools, caching, or preprocessing results), you can build your own MCP server that calls our REST API. See the [Build an MCP Server](/blog/mcp-server-urantia-book) tutorial for a step-by-step guide.
