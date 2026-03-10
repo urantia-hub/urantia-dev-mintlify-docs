@@ -1,8 +1,17 @@
 ---
-title: "MCP Server - Give AI Agents Direct API Access"
-sidebarTitle: "API MCP Server"
-description: "Connect Claude Desktop, Cursor, Windsurf, and other AI agents to the Urantia Papers API via MCP. 13 tools for search, paragraphs, entities, and audio — zero setup."
+title: "MCP Servers - Give AI Agents Access to the Urantia Book"
+sidebarTitle: "MCP Servers"
+description: "Connect Claude Desktop, Cursor, Windsurf, and other AI agents to the Urantia Papers API and documentation via MCP. 14 tools across 2 servers — zero setup."
 ---
+
+There are two MCP servers available — one for accessing Urantia Book data directly, and one for searching this documentation site.
+
+| Server | URL | Tools | Purpose |
+|--------|-----|-------|---------|
+| **API MCP Server** | `api.urantia.dev/mcp` | 13 tools | Search, paragraphs, entities, audio |
+| **Docs MCP Server** | `urantia.dev/mcp` | 1 tool | Search the documentation site |
+
+## API MCP Server
 
 The Urantia Papers API includes a built-in [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server that exposes all 13 API endpoints as tools any AI agent can use natively.
 
@@ -10,11 +19,7 @@ The Urantia Papers API includes a built-in [Model Context Protocol](https://mode
 https://api.urantia.dev/mcp
 ```
 
-<Note>
-This is the **API MCP server** — it gives agents direct access to search, paragraphs, entities, and audio data. For searching these docs, use the separate [docs MCP server](/ai-agents#docs-mcp-server) at `urantia.dev/mcp`.
-</Note>
-
-## Setup
+### Setup
 
 Add the server to your MCP client config. No API key, no installation, no build step.
 
@@ -64,11 +69,11 @@ Add the server to your MCP client config. No API key, no installation, no build 
 
 Works with any client that supports [MCP Streamable HTTP transport](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http).
 
-## Available Tools
+### Available Tools
 
 The MCP server exposes 13 tools, one for each API endpoint:
 
-### Structure & Navigation
+#### Structure & Navigation
 
 | Tool | Description |
 |------|-------------|
@@ -77,7 +82,7 @@ The MCP server exposes 13 tools, one for each API endpoint:
 | `get_paper` | Get a single paper with all its paragraphs. Supports `include_entities`. |
 | `get_paper_sections` | Get all sections within a paper, ordered by section number. |
 
-### Paragraphs
+#### Paragraphs
 
 | Tool | Description |
 |------|-------------|
@@ -85,14 +90,14 @@ The MCP server exposes 13 tools, one for each API endpoint:
 | `get_paragraph_context` | Get a paragraph with N paragraphs before and after (configurable `window`, 1-10). |
 | `get_random_paragraph` | Get a random paragraph. Great for exploration. |
 
-### Search
+#### Search
 
 | Tool | Description |
 |------|-------------|
 | `search` | Full-text search. Modes: `and` (default), `or`, `phrase`. Filters: `paper_id`, `part_id`. |
 | `semantic_search` | Semantic similarity search via vector embeddings. Finds conceptually related passages. |
 
-### Entities
+#### Entities
 
 | Tool | Description |
 |------|-------------|
@@ -100,13 +105,13 @@ The MCP server exposes 13 tools, one for each API endpoint:
 | `get_entity` | Get entity details: name, type, aliases, description, related entities, citation count. |
 | `get_entity_paragraphs` | Get all paragraphs that mention a specific entity. |
 
-### Audio
+#### Audio
 
 | Tool | Description |
 |------|-------------|
 | `get_audio` | Get audio file URLs for a paragraph. Accepts any reference format. |
 
-## Example Prompts
+### Example Prompts
 
 Once connected, try asking your AI agent:
 
@@ -117,7 +122,7 @@ Once connected, try asking your AI agent:
 - **"Find all entities of type 'place'"** — uses `list_entities`
 - **"What entities are mentioned in paragraph 0:0.1?"** — uses `get_paragraph` with `include_entities`
 
-## How It Works
+### How It Works
 
 The MCP server uses [Streamable HTTP transport](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http), which means:
 
@@ -126,7 +131,7 @@ The MCP server uses [Streamable HTTP transport](https://modelcontextprotocol.io/
 - **Same rate limits** as the REST API (100 requests/minute per IP)
 - **Same data** — MCP tools query the database directly, returning the same results as the REST endpoints
 
-## MCP vs REST
+### MCP vs REST
 
 Both give you access to the same data. Choose based on your use case:
 
@@ -137,6 +142,81 @@ Both give you access to the same data. Choose based on your use case:
 | **Auth** | None | None |
 | **Tools/Endpoints** | 13 tools | 13 endpoints |
 | **Response format** | MCP content blocks | JSON with `data`/`meta` wrappers |
+
+## Docs MCP Server
+
+Mintlify provides a hosted MCP server that lets AI agents search these documentation pages — useful for discovering endpoints, understanding usage patterns, and learning the API.
+
+```
+https://urantia.dev/mcp
+```
+
+### Setup
+
+<Tabs>
+  <Tab title="Claude Desktop">
+    Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+
+    ```json
+    {
+      "mcpServers": {
+        "urantia-dev-docs": {
+          "command": "npx",
+          "args": ["-y", "@anthropic-ai/mcp-remote@latest", "https://urantia.dev/mcp"]
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Claude Code">
+    Add to `.mcp.json` in your project root:
+
+    ```json
+    {
+      "mcpServers": {
+        "urantia-dev-docs": {
+          "command": "npx",
+          "args": ["-y", "@anthropic-ai/mcp-remote@latest", "https://urantia.dev/mcp"]
+        }
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+### Available Tool
+
+| Tool | Description |
+|------|-------------|
+| `SearchUrantiaDev` | Search across the documentation to find endpoint references, code examples, guides, and usage patterns. |
+
+### Example Prompts
+
+- **"How do I search the Urantia Papers API?"**
+- **"What paragraph reference formats does the API support?"**
+- **"Show me how to use the entities endpoint"**
+- **"What audio voices are available?"**
+
+## Using Both MCP Servers
+
+For the best experience, add both servers to your client:
+
+```json
+{
+  "mcpServers": {
+    "urantia-papers": {
+      "url": "https://api.urantia.dev/mcp"
+    },
+    "urantia-dev-docs": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-remote@latest", "https://urantia.dev/mcp"]
+    }
+  }
+}
+```
+
+- **API MCP Server** (`api.urantia.dev/mcp`) — 13 tools for accessing Urantia Book data directly
+- **Docs MCP Server** (`urantia.dev/mcp`) — 1 tool for searching this documentation site
 
 ## Building a Custom MCP Server
 

@@ -30,7 +30,7 @@
           },
           {
             "group": "Integrations",
-            "pages": ["mcp", "mcp-docs", "ai-agents"]
+            "pages": ["mcp-servers", "ai-agents"]
           },
           {
             "group": "More",

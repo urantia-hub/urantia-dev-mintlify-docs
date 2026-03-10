@@ -1,6 +1,6 @@
 ---
 title: "AI Agent Integration - RAG & LLM Patterns for Urantia Book"
-sidebarTitle: "For AI Agents"
+sidebarTitle: "AI Best Practices"
 description: "Recommended patterns for integrating Urantia Book content into AI agents, RAG pipelines, and LLM applications."
 ---
 
@@ -77,42 +77,11 @@ The `/paragraphs/:ref/context` endpoint is particularly useful for RAG. It retur
 
 This provides the LLM with the narrative flow around a passage, which leads to more accurate and contextual responses.
 
-## MCP Server
+## MCP Servers
 
-The API includes a built-in MCP server that exposes all 13 endpoints as tools — no setup, no API key, no local process:
-
-```json
-{
-  "mcpServers": {
-    "urantia-papers": {
-      "url": "https://api.urantia.dev/mcp"
-    }
-  }
-}
-```
-
-Add this to Claude Desktop, Cursor, Claude Code, or any Streamable HTTP MCP client. Your agent gets 13 tools: search, semantic search, paragraphs, papers, entities, audio, and more.
-
-<Card title="MCP Server Guide" icon="plug" href="/mcp">
-  Full setup instructions, tool reference, and example prompts.
+<Card title="MCP Servers" icon="plug" href="/mcp-servers">
+  Connect AI agents to the Urantia Book via 2 MCP servers — 13 API tools + docs search. Full setup instructions, tool reference, and example prompts.
 </Card>
-
-### Docs MCP Server
-
-Mintlify also provides a separate MCP server for searching these docs:
-
-```json
-{
-  "mcpServers": {
-    "urantia-dev-docs": {
-      "command": "npx",
-      "args": ["-y", "@anthropic-ai/mcp-remote@latest", "https://urantia.dev/mcp"]
-    }
-  }
-}
-```
-
-This gives your agent a `SearchUrantiaDev` tool for discovering endpoints and usage patterns. Use the **API MCP server** (`api.urantia.dev/mcp`) for actual data access, and the **docs MCP server** (`urantia.dev/mcp`) for learning how to use the API.
 
 ## OpenAPI spec
 
