@@ -1,0 +1,82 @@
+---
+title: "Docs MCP Server - Search the Documentation"
+sidebarTitle: "Docs MCP Server"
+description: "Use the Mintlify-hosted MCP server to search the Urantia.dev documentation from Claude Desktop, Cursor, or any MCP-compatible client."
+---
+
+Mintlify provides a hosted MCP server that lets AI agents search these documentation pages — useful for discovering endpoints, understanding usage patterns, and learning the API.
+
+```
+https://urantia.dev/mcp
+```
+
+<Note>
+This searches the **documentation site**, not the API itself. For direct access to Urantia Book data (search, paragraphs, entities, audio), use the [API MCP Server](/mcp) at `api.urantia.dev/mcp`.
+</Note>
+
+## Setup
+
+<Tabs>
+  <Tab title="Claude Desktop">
+    Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+
+    ```json
+    {
+      "mcpServers": {
+        "urantia-dev-docs": {
+          "command": "npx",
+          "args": ["-y", "@anthropic-ai/mcp-remote@latest", "https://urantia.dev/mcp"]
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Claude Code">
+    Add to `.mcp.json` in your project root:
+
+    ```json
+    {
+      "mcpServers": {
+        "urantia-dev-docs": {
+          "command": "npx",
+          "args": ["-y", "@anthropic-ai/mcp-remote@latest", "https://urantia.dev/mcp"]
+        }
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Available Tool
+
+| Tool | Description |
+|------|-------------|
+| `SearchUrantiaDev` | Search across the documentation to find endpoint references, code examples, guides, and usage patterns. |
+
+## Example Prompts
+
+- **"How do I search the Urantia Papers API?"**
+- **"What paragraph reference formats does the API support?"**
+- **"Show me how to use the entities endpoint"**
+- **"What audio voices are available?"**
+
+## Using Both MCP Servers
+
+For the best experience, add both servers to your client:
+
+```json
+{
+  "mcpServers": {
+    "urantia-papers": {
+      "url": "https://api.urantia.dev/mcp"
+    },
+    "urantia-dev-docs": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-remote@latest", "https://urantia.dev/mcp"]
+    }
+  }
+}
+```
+
+- **API MCP Server** (`api.urantia.dev/mcp`) — 13 tools for accessing Urantia Book data directly
+- **Docs MCP Server** (`urantia.dev/mcp`) — 1 tool for searching this documentation site
