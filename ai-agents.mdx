@@ -77,6 +77,35 @@ The `/paragraphs/:ref/context` endpoint is particularly useful for RAG. It retur
 
 This provides the LLM with the narrative flow around a passage, which leads to more accurate and contextual responses.
 
+## MCP Server
+
+Mintlify provides a hosted MCP (Model Context Protocol) server for these docs at:
+
+```
+https://urantia.dev/mcp
+```
+
+You can add it to Claude Desktop or any MCP-compatible client:
+
+```json
+{
+  "mcpServers": {
+    "urantia-dev-docs": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-remote@latest", "https://urantia.dev/mcp"]
+    }
+  }
+}
+```
+
+This gives your AI agent a `SearchUrantiaDev` tool that searches the documentation site — useful for discovering available endpoints and usage patterns. Note that this searches the *docs*, not the API itself.
+
+For full API access (search, entities, paragraphs, etc.), you'll want to build a custom MCP server that calls the API endpoints directly. See the [Build an MCP Server](/blog/build-urantia-book-mcp-server) tutorial for a step-by-step guide.
+
+<Info>
+A full MCP server exposing all API endpoints as tools is on the long-term roadmap.
+</Info>
+
 ## OpenAPI spec
 
 The full OpenAPI 3.1 specification is available at:
