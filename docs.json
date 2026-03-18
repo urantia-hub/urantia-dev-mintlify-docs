@@ -83,6 +83,21 @@
           {
             "group": "Audio",
             "pages": ["api-reference/endpoint/get-audio"]
+          },
+          {
+            "group": "Citation",
+            "pages": ["api-reference/endpoint/get-citation"]
+          },
+          {
+            "group": "OG Images",
+            "pages": ["api-reference/endpoint/get-og-image"]
+          },
+          {
+            "group": "Embeddings",
+            "pages": [
+              "api-reference/endpoint/get-embedding",
+              "api-reference/endpoint/export-embeddings"
+            ]
           }
         ]
       },

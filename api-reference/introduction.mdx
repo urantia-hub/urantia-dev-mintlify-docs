@@ -1,7 +1,7 @@
 ---
 title: "API Reference - Urantia Book REST API Documentation"
 sidebarTitle: "Overview"
-description: "Complete REST API reference for the Urantia Papers API. 9 endpoints, no auth required, 100 req/min, CDN cached."
+description: "Complete REST API reference for the Urantia Papers API. 17 endpoints, no auth required, 200 req/min, CDN cached."
 ---
 
 ## Base URL
@@ -16,23 +16,35 @@ No authentication is required. The API is free and open.
 
 ## Rate limiting
 
-Requests are rate limited to **100 requests per minute** per IP address. Rate limit headers are included in every response:
+Requests are rate limited to **200 requests per minute** per IP address. Rate limit headers are included in every response:
 
 | Header | Description |
 |--------|-------------|
-| `X-RateLimit-Limit` | Maximum requests per window (100) |
+| `X-RateLimit-Limit` | Maximum requests per window (200) |
 | `X-RateLimit-Remaining` | Requests remaining in current window |
 | `X-RateLimit-Reset` | Unix timestamp (seconds) when the window resets |
 
-If you exceed the limit, you'll receive a `429` response:
+If you exceed the limit, you'll receive a `429` response.
+
+## Error responses
+
+All errors follow [RFC 9457 Problem Details](https://www.rfc-editor.org/rfc/rfc9457) with `Content-Type: application/problem+json`:
 
 ```json
 {
-  "error": "Too many requests, please try again later"
+  "type": "https://urantia.dev/errors/not-found",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Paragraph \"999:999.999\" not found"
 }
 ```
 
-Wait until `X-RateLimit-Reset` before retrying.
+| Field | Description |
+|-------|-------------|
+| `type` | URI identifying the error type |
+| `title` | Short human-readable summary |
+| `status` | HTTP status code |
+| `detail` | Specific explanation for this occurrence |
 
 ## Caching
 
@@ -40,12 +52,13 @@ All responses include `Cache-Control` headers. Cloudflare's CDN caches responses
 
 | Route | CDN cache | Browser cache |
 |-------|-----------|---------------|
-| `/toc`, `/papers/*`, `/paragraphs/:ref`, `/audio/*` | 24 hours | 1 hour |
+| `/toc`, `/papers/*`, `/paragraphs/:ref`, `/audio/*`, `/cite`, `/entities/*`, `/embeddings/*` | 24 hours | 1 hour |
+| `/og/:ref` | Permanent (immutable) | Permanent |
 | `/search` | 1 hour | 5 minutes |
 | `/paragraphs/random` | None | None |
 | `/`, `/docs`, `/openapi.json` | 1 hour | 5 minutes |
 
-Static content (papers, paragraphs, audio) is immutable, so it's cached aggressively. The random endpoint is never cached.
+Static content (papers, paragraphs, audio, OG images) is immutable, so it's cached aggressively. The random endpoint is never cached.
 
 ## Paragraph ID formats
 
@@ -56,6 +69,26 @@ Many endpoints accept paragraph references in three auto-detected formats:
 | globalId | `1:2.0.1` | `partId:paperId.sectionId.paragraphId` |
 | standardReferenceId | `2:0.1` | `paperId:sectionId.paragraphId` |
 | paperSectionParagraphId | `2.0.1` | `paperId.sectionId.paragraphId` |
+
+## RAG-optimized format
+
+Paragraph endpoints support `?format=rag` to return a streamlined shape for AI/RAG pipelines:
+
+```json
+{
+  "data": {
+    "ref": "1:0.1",
+    "text": "plain text",
+    "citation": "The Urantia Book, Paper 1, Section 0, Paragraph 1",
+    "metadata": { "paperId": "1", "paperTitle": "...", "sectionId": "0", ... },
+    "navigation": { "prev": null, "next": "1:0.2" },
+    "tokenCount": 142,
+    "entities": ["Universal Father"]
+  }
+}
+```
+
+Works on `GET /paragraphs/:ref?format=rag` and `GET /paragraphs/random?format=rag`.
 
 ## Interactive docs
 
