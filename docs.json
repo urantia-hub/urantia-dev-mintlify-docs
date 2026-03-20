@@ -35,6 +35,10 @@
           {
             "group": "More",
             "pages": ["support"]
+          },
+          {
+            "group": "Legal",
+            "pages": ["terms-of-service", "privacy-policy"]
           }
         ]
       },
