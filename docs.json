@@ -30,7 +30,7 @@
           },
           {
             "group": "Integrations",
-            "pages": ["mcp-servers", "ai-agents"]
+            "pages": ["mcp-servers", "ai-agents", "sdks"]
           },
           {
             "group": "More",

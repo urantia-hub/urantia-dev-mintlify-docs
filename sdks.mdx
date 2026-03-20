@@ -1,0 +1,248 @@
+---
+title: "TypeScript SDKs - Build Apps with the Urantia Papers API"
+sidebarTitle: "TypeScript SDKs"
+description: "Official TypeScript SDKs for the Urantia Papers API. Typed client for all endpoints plus OAuth authentication — zero dependencies, full autocomplete."
+---
+
+Two npm packages for building apps with the Urantia Papers API:
+
+| Package | Description | Install |
+|---------|-------------|---------|
+| **[@urantia/api](https://www.npmjs.com/package/@urantia/api)** | Typed client for api.urantia.dev | `npm install @urantia/api` |
+| **[@urantia/auth](https://www.npmjs.com/package/@urantia/auth)** | OAuth client for accounts.urantiahub.com | `npm install @urantia/auth` |
+
+Both are zero-dependency, TypeScript-first, and use native `fetch` under the hood.
+
+## @urantia/api
+
+Typed client for every endpoint on api.urantia.dev. Full autocomplete for all request parameters and response shapes.
+
+### Install
+
+```bash
+npm install @urantia/api
+```
+
+### Quick Start
+
+```typescript
+import { UrantiaAPI } from '@urantia/api'
+
+const api = new UrantiaAPI()
+
+// List all 197 papers
+const { data: papers } = await api.papers.list()
+console.log(papers[0].title) // "Foreword"
+
+// Get a specific paragraph by reference
+const { data: paragraph } = await api.paragraphs.get('2:0.1')
+console.log(paragraph.text)
+
+// Full-text search
+const results = await api.search.fullText('divine love')
+console.log(results.meta.total) // number of matches
+
+// Semantic search
+const similar = await api.search.semantic('the nature of God')
+```
+
+### All Endpoints
+
+#### Public (no auth required)
+
+| Method | Description |
+|--------|-------------|
+| `api.toc.get()` | Full table of contents (parts and papers) |
+| `api.papers.list()` | All 197 papers with metadata |
+| `api.papers.get(id)` | Single paper with all paragraphs |
+| `api.paragraphs.get(ref)` | Paragraph by any reference format |
+| `api.paragraphs.random()` | Random paragraph |
+| `api.paragraphs.context(ref, { window })` | Paragraph with surrounding context |
+| `api.search.fullText(params)` | Full-text search (and/or/phrase modes) |
+| `api.search.semantic(params)` | Semantic similarity search |
+| `api.entities.list(options)` | Browse 4,400+ entities with filters |
+| `api.entities.get(id)` | Entity details |
+| `api.entities.paragraphs(id)` | Paragraphs mentioning an entity |
+| `api.audio.get(ref)` | Audio URLs for a paragraph |
+| `api.cite.get(ref, style)` | Generate citation (APA, MLA, Chicago, BibTeX) |
+| `api.embeddings.get(refs)` | Vector embeddings for paragraphs |
+
+#### Authenticated (requires token)
+
+| Method | Description |
+|--------|-------------|
+| `api.me.get()` | Current user profile |
+| `api.me.update(data)` | Update profile |
+| `api.me.bookmarks.list()` | List bookmarks |
+| `api.me.bookmarks.create({ ref, category })` | Create or update a bookmark |
+| `api.me.bookmarks.delete(ref)` | Delete a bookmark |
+| `api.me.bookmarks.categories()` | List bookmark categories |
+| `api.me.notes.list()` | List notes |
+| `api.me.notes.create({ ref, text })` | Create a note |
+| `api.me.notes.update(id, { text })` | Update a note |
+| `api.me.notes.delete(id)` | Delete a note |
+| `api.me.readingProgress.get()` | Reading progress per paper |
+| `api.me.readingProgress.mark(refs)` | Mark paragraphs as read |
+| `api.me.readingProgress.unmark(ref)` | Unmark a paragraph |
+| `api.me.preferences.get()` | Get user preferences |
+| `api.me.preferences.update(prefs)` | Update preferences (shallow merge) |
+
+<Info>
+  Authenticated endpoints require a bearer token. See [@urantia/auth](#urantiauth) below for how to obtain one, or pass a token directly:
+  ```typescript
+  const api = new UrantiaAPI({ token: 'your-access-token' })
+  ```
+</Info>
+
+### Paragraph References
+
+The SDK accepts all three reference formats interchangeably:
+
+| Format | Example | Description |
+|--------|---------|-------------|
+| Standard | `2:0.1` | paper:section.paragraph |
+| Global | `1:2.0.1` | part:paper.section.paragraph |
+| Short | `2.0.1` | paper.section.paragraph |
+
+### Options
+
+```typescript
+const api = new UrantiaAPI({
+  baseUrl: 'https://api.urantia.dev', // default
+  token: 'your-access-token',         // for authenticated endpoints
+})
+```
+
+---
+
+## @urantia/auth
+
+OAuth client for authenticating users via [accounts.urantiahub.com](https://accounts.urantiahub.com). Handles the full OAuth flow with PKCE security.
+
+### Install
+
+```bash
+npm install @urantia/auth
+```
+
+### Browser Sign-In (Popup)
+
+```typescript
+import { UrantiaAuth } from '@urantia/auth'
+
+const auth = new UrantiaAuth({
+  appId: 'my-app',
+  redirectUri: 'https://myapp.com/callback',
+})
+
+// Opens popup to accounts.urantiahub.com
+const session = await auth.signIn({ scopes: ['bookmarks', 'notes'] })
+console.log(session.user.id, session.accessToken)
+```
+
+### Browser Sign-In (Redirect)
+
+For mobile or environments where popups are blocked:
+
+<Steps>
+  <Step title="Start sign-in on your page">
+    ```typescript
+    const auth = new UrantiaAuth({
+      appId: 'my-app',
+      redirectUri: 'https://myapp.com/callback',
+    })
+    await auth.signIn({ mode: 'redirect', scopes: ['bookmarks'] })
+    // → user is redirected to accounts.urantiahub.com
+    ```
+  </Step>
+  <Step title="Handle the callback">
+    On your redirect URI page:
+    ```typescript
+    const auth = new UrantiaAuth({
+      appId: 'my-app',
+      redirectUri: 'https://myapp.com/callback',
+    })
+    const session = await auth.handleCallback()
+    // → session.user, session.accessToken are now available
+    ```
+  </Step>
+</Steps>
+
+### Server-Side Token Exchange
+
+For backend environments where you already have an authorization code:
+
+```typescript
+import { UrantiaAuth } from '@urantia/auth'
+
+const auth = new UrantiaAuth({
+  appId: 'my-app',
+  appSecret: process.env.URANTIA_APP_SECRET,
+})
+
+const session = await auth.signIn({ code: authorizationCode })
+```
+
+### Session Management
+
+```typescript
+// Check current session (restored from localStorage)
+const session = auth.getSession()
+
+// Get just the token
+const token = auth.getToken()
+
+// Listen for auth state changes
+const unsubscribe = auth.onAuthStateChange((session) => {
+  if (session) {
+    console.log('Signed in:', session.user.id)
+  } else {
+    console.log('Signed out')
+  }
+})
+
+// Sign out (clears localStorage)
+auth.signOut()
+```
+
+### Options
+
+| Option | Type | Required | Default |
+|--------|------|----------|---------|
+| `appId` | `string` | Yes | — |
+| `appSecret` | `string` | Server only | — |
+| `redirectUri` | `string` | Browser | — |
+| `loginUrl` | `string` | No | `https://accounts.urantiahub.com` |
+| `apiUrl` | `string` | No | `https://api.urantia.dev` |
+
+---
+
+## Using Both Together
+
+The typical flow: authenticate with `@urantia/auth`, then pass the token to `@urantia/api`.
+
+```typescript
+import { UrantiaAuth } from '@urantia/auth'
+import { UrantiaAPI } from '@urantia/api'
+
+// 1. Sign in
+const auth = new UrantiaAuth({
+  appId: 'my-app',
+  redirectUri: 'https://myapp.com/callback',
+})
+const session = await auth.signIn()
+
+// 2. Create an authenticated API client
+const api = new UrantiaAPI({ token: session.accessToken })
+
+// 3. Use authenticated endpoints
+await api.me.bookmarks.create({ ref: '2:0.1', category: 'Favorites' })
+const { data: bookmarks } = await api.me.bookmarks.list()
+const { data: progress } = await api.me.readingProgress.get()
+```
+
+## Links
+
+- **npm:** [@urantia/api](https://www.npmjs.com/package/@urantia/api) · [@urantia/auth](https://www.npmjs.com/package/@urantia/auth)
+- **GitHub:** [urantia-dev-sdks](https://github.com/urantiahub/urantia-dev-sdks)
+- **API Reference:** [api.urantia.dev/docs](https://api.urantia.dev/docs)
