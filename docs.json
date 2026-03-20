@@ -29,11 +29,15 @@
             "pages": ["papers", "paragraphs", "entities", "audio", "cdn"]
           },
           {
-            "group": "Integrations",
-            "pages": ["mcp-servers", "ai-agents", "sdks"]
+            "group": "SDKs",
+            "pages": ["sdks/overview", "sdks/api", "sdks/auth"]
           },
           {
-            "group": "More",
+            "group": "Integrations",
+            "pages": ["mcp-servers", "ai-agents"]
+          },
+          {
+            "group": "Donate",
             "pages": ["support"]
           },
           {

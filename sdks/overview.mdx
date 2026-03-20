@@ -1,0 +1,65 @@
+---
+title: "TypeScript SDKs - Build Apps with the Urantia Papers API"
+sidebarTitle: "Overview"
+description: "Official TypeScript SDKs for the Urantia Papers API. Typed client for all endpoints plus OAuth authentication — zero dependencies, full autocomplete."
+---
+
+Two npm packages for building apps with the Urantia Papers API:
+
+| Package | Description | Install |
+|---------|-------------|---------|
+| **[@urantia/api](https://www.npmjs.com/package/@urantia/api)** | Typed client for api.urantia.dev | `npm install @urantia/api` |
+| **[@urantia/auth](https://www.npmjs.com/package/@urantia/auth)** | OAuth client for accounts.urantiahub.com | `npm install @urantia/auth` |
+
+Both are zero-dependency, TypeScript-first, and use native `fetch` under the hood.
+
+## When to Use Which
+
+- **Public data only** (papers, search, entities, audio) → install just `@urantia/api`
+- **User features** (bookmarks, notes, reading progress) → install both `@urantia/api` and `@urantia/auth`
+
+## Quick Install
+
+```bash
+# Public endpoints only
+npm install @urantia/api
+
+# Public + authenticated endpoints
+npm install @urantia/api @urantia/auth
+```
+
+## Using Both Together
+
+The typical flow: authenticate with `@urantia/auth`, then pass the token to `@urantia/api`.
+
+```typescript
+import { UrantiaAuth } from '@urantia/auth'
+import { UrantiaAPI } from '@urantia/api'
+
+// 1. Sign in
+const auth = new UrantiaAuth({
+  appId: 'my-app',
+  redirectUri: 'https://myapp.com/callback',
+})
+const session = await auth.signIn()
+
+// 2. Create an authenticated API client
+const api = new UrantiaAPI({ token: session.accessToken })
+
+// 3. Use authenticated endpoints
+await api.me.bookmarks.create({ ref: '2:0.1', category: 'Favorites' })
+const { data: bookmarks } = await api.me.bookmarks.list()
+const { data: progress } = await api.me.readingProgress.get()
+```
+
+## See It in Action
+
+The [Interactive Demo](https://demo.urantia.dev) is built entirely with these SDKs. The [Account section](https://demo.urantia.dev/#account) shows the full OAuth flow — sign in, manage bookmarks, notes, reading progress, and preferences.
+
+The demo app is [open source](https://github.com/kelsonic/urantia-dev-demo) — see how `@urantia/api` and `@urantia/auth` are used in a real Next.js app.
+
+## Links
+
+- **npm:** [@urantia/api](https://www.npmjs.com/package/@urantia/api) · [@urantia/auth](https://www.npmjs.com/package/@urantia/auth)
+- **GitHub:** [urantia-dev-sdks](https://github.com/kelsonic/urantia-dev-sdks)
+- **API Reference:** [Full endpoint documentation](/api-reference/introduction)

@@ -1,0 +1,159 @@
+---
+title: "@urantia/api - Typed API Client"
+sidebarTitle: "@urantia/api"
+description: "Typed TypeScript client for the Urantia Papers API. Full autocomplete for papers, paragraphs, search, entities, audio, citations, and more."
+---
+
+## Install
+
+```bash
+npm install @urantia/api
+```
+
+## Quick Start
+
+```typescript
+import { UrantiaAPI } from '@urantia/api'
+
+const api = new UrantiaAPI()
+
+// List all 197 papers
+const { data: papers } = await api.papers.list()
+console.log(papers[0].title) // "Foreword"
+
+// Get a specific paragraph
+const { data: paragraph } = await api.paragraphs.get('2:0.1')
+console.log(paragraph.text)
+
+// Full-text search
+const results = await api.search.fullText('divine love')
+console.log(results.meta.total)
+
+// Semantic search
+const similar = await api.search.semantic('the nature of God')
+```
+
+## Authentication
+
+For public endpoints, no auth is needed. For user endpoints (`api.me.*`), pass an access token:
+
+```typescript
+const api = new UrantiaAPI({ token: accessToken })
+
+const { data: user } = await api.me.get()
+await api.me.bookmarks.create({ ref: '2:0.1', category: 'Favorites' })
+```
+
+<Info>
+  See [@urantia/auth](/sdks/auth) for how to obtain an access token via OAuth.
+</Info>
+
+## Endpoint Groups
+
+Every method returns typed responses with full autocomplete. For detailed parameter docs, see the [API Reference](/api-reference/introduction).
+
+### Content
+
+```typescript
+// Table of contents
+const { data } = await api.toc.get()
+
+// Papers
+const { data: papers } = await api.papers.list()
+const { data: paper } = await api.papers.get('2', { include: 'entities' })
+
+// Paragraphs
+const { data: p } = await api.paragraphs.get('2:0.1')
+const { data: random } = await api.paragraphs.random()
+const { data: ctx } = await api.paragraphs.context('2:0.1', { window: 3 })
+
+// Entities
+const { data: entities } = await api.entities.list({ type: 'being', limit: 20 })
+const { data: entity } = await api.entities.get('jesus')
+const { data: mentions } = await api.entities.paragraphs('jesus')
+```
+
+### Search
+
+```typescript
+// Full-text (AND, OR, phrase modes)
+const results = await api.search.fullText({ q: 'divine love', type: 'phrase', limit: 10 })
+
+// Semantic (vector similarity)
+const results = await api.search.semantic({ q: 'what happens after death', limit: 5 })
+```
+
+### Utilities
+
+```typescript
+// Audio URLs
+const { data: audio } = await api.audio.get('2:0.1')
+
+// Citations (APA, MLA, Chicago, BibTeX)
+const { data: cite } = await api.cite.get('2:0.1', 'apa')
+
+// Vector embeddings
+const { data: embeddings } = await api.embeddings.get(['2:0.1', '2:0.2'])
+```
+
+### User Data (Authenticated)
+
+```typescript
+const api = new UrantiaAPI({ token: accessToken })
+
+// Profile
+const { data: user } = await api.me.get()
+await api.me.update({ name: 'My Name' })
+
+// Bookmarks
+await api.me.bookmarks.create({ ref: '2:0.1', category: 'Favorites' })
+const { data: bookmarks } = await api.me.bookmarks.list()
+const { data: categories } = await api.me.bookmarks.categories()
+await api.me.bookmarks.delete('2:0.1')
+
+// Notes
+await api.me.notes.create({ ref: '2:0.1', text: 'Insightful passage' })
+const { data: notes } = await api.me.notes.list()
+await api.me.notes.update(noteId, { text: 'Updated text' })
+await api.me.notes.delete(noteId)
+
+// Reading Progress
+await api.me.readingProgress.mark(['1:0.1', '1:0.2', '1:0.3'])
+const { data: progress } = await api.me.readingProgress.get()
+await api.me.readingProgress.unmark('1:0.1')
+
+// Preferences
+await api.me.preferences.update({ theme: 'dark', fontSize: 18 })
+const { data: prefs } = await api.me.preferences.get()
+```
+
+## Paragraph References
+
+The SDK accepts all three reference formats interchangeably:
+
+| Format | Example | Description |
+|--------|---------|-------------|
+| Standard | `2:0.1` | paper:section.paragraph |
+| Global | `1:2.0.1` | part:paper.section.paragraph |
+| Short | `2.0.1` | paper.section.paragraph |
+
+## Options
+
+```typescript
+const api = new UrantiaAPI({
+  baseUrl: 'https://api.urantia.dev', // default
+  token: 'your-access-token',         // for authenticated endpoints
+})
+```
+
+## Error Handling
+
+All methods throw an `Error` with the API's error message on failure:
+
+```typescript
+try {
+  const { data } = await api.paragraphs.get('999:999.999')
+} catch (err) {
+  console.error(err.message) // "404: Paragraph not found"
+}
+```

@@ -1,0 +1,161 @@
+---
+title: "@urantia/auth - OAuth Authentication"
+sidebarTitle: "@urantia/auth"
+description: "OAuth client for Urantia apps. Handles sign-in via accounts.urantiahub.com with PKCE security, session persistence, and auth state events."
+---
+
+## Install
+
+```bash
+npm install @urantia/auth
+```
+
+## Overview
+
+`@urantia/auth` handles the OAuth Authorization Code flow with [accounts.urantiahub.com](https://accounts.urantiahub.com). Users sign in once and authorize your app to access their data (bookmarks, notes, reading progress, preferences).
+
+Your app receives an access token (7-day expiry) that you pass to `@urantia/api` for authenticated endpoints.
+
+## Browser Sign-In (Redirect)
+
+The most common flow for web apps:
+
+<Steps>
+  <Step title="Start sign-in">
+    Redirect the user to accounts.urantiahub.com:
+
+    ```typescript
+    import { UrantiaAuth } from '@urantia/auth'
+
+    const auth = new UrantiaAuth({
+      appId: 'my-app',
+      redirectUri: 'https://myapp.com/callback',
+    })
+
+    await auth.signIn({ mode: 'redirect', scopes: ['bookmarks', 'notes'] })
+    // → user is redirected to accounts.urantiahub.com
+    ```
+  </Step>
+  <Step title="Handle the callback">
+    On your redirect URI page, complete the flow:
+
+    ```typescript
+    const auth = new UrantiaAuth({
+      appId: 'my-app',
+      redirectUri: 'https://myapp.com/callback',
+    })
+
+    const session = await auth.handleCallback()
+    // session.user.id, session.user.email, session.accessToken
+    ```
+  </Step>
+  <Step title="Use the token">
+    Pass the access token to `@urantia/api`:
+
+    ```typescript
+    import { UrantiaAPI } from '@urantia/api'
+
+    const api = new UrantiaAPI({ token: session.accessToken })
+    const { data: bookmarks } = await api.me.bookmarks.list()
+    ```
+  </Step>
+</Steps>
+
+## Browser Sign-In (Popup)
+
+For desktop apps or when you don't want to navigate away:
+
+```typescript
+const auth = new UrantiaAuth({
+  appId: 'my-app',
+  redirectUri: 'https://myapp.com/callback',
+})
+
+// Opens popup window — resolves when user completes sign-in
+const session = await auth.signIn({ scopes: ['bookmarks', 'notes'] })
+console.log(session.user.email, session.accessToken)
+```
+
+## Server-Side Token Exchange
+
+For backend environments where you already have an authorization code and app secret:
+
+```typescript
+import { UrantiaAuth } from '@urantia/auth'
+
+const auth = new UrantiaAuth({
+  appId: 'my-app',
+  appSecret: process.env.URANTIA_APP_SECRET,
+})
+
+const session = await auth.signIn({ code: authorizationCode })
+```
+
+<Info>
+  Server-side exchange is more secure because the app secret never leaves your server. The [demo app](https://demo.urantia.dev) uses this approach — the browser handles the redirect, and a server-side API route exchanges the code.
+</Info>
+
+## Session Management
+
+Sessions are automatically persisted in `localStorage` and restored on page load.
+
+```typescript
+// Check current session (returns null if not signed in or expired)
+const session = auth.getSession()
+
+// Get just the token
+const token = auth.getToken()
+
+// Listen for auth state changes
+const unsubscribe = auth.onAuthStateChange((session) => {
+  if (session) {
+    console.log('Signed in:', session.user.email)
+  } else {
+    console.log('Signed out')
+  }
+})
+
+// Sign out (clears localStorage)
+auth.signOut()
+```
+
+## Available Scopes
+
+When calling `signIn()`, you can request specific scopes:
+
+| Scope | Access |
+|-------|--------|
+| `bookmarks` | Read and write bookmarks |
+| `notes` | Read and write notes |
+| `reading-progress` | Read and write reading progress |
+| `preferences` | Read and write preferences |
+
+```typescript
+await auth.signIn({ scopes: ['bookmarks', 'notes'] })
+```
+
+## Options
+
+| Option | Type | Required | Default |
+|--------|------|----------|---------|
+| `appId` | `string` | Yes | — |
+| `appSecret` | `string` | Server only | — |
+| `redirectUri` | `string` | Browser | — |
+| `loginUrl` | `string` | No | `https://accounts.urantiahub.com` |
+| `apiUrl` | `string` | No | `https://api.urantia.dev` |
+
+## Security
+
+- **PKCE** (Proof Key for Code Exchange) — used automatically for browser flows to prevent authorization code interception
+- **State parameter** — CSRF protection via random state verification
+- **Token expiry** — access tokens expire after 7 days; expired sessions are automatically cleared
+- **App secrets** — never stored in the browser; use server-side token exchange for production apps
+
+## Registering Your App
+
+To use `@urantia/auth`, you need a registered OAuth app. Visit [accounts.urantiahub.com/developer](https://accounts.urantiahub.com/developer) to register your app and get an `appId` and `appSecret`.
+
+When registering, you'll need:
+- **App name** — shown to users on the consent screen
+- **Redirect URIs** — URLs where users are sent after authorization
+- **Scopes** — which permissions your app needs
