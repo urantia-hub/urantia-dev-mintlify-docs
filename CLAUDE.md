@@ -17,7 +17,10 @@ Mintlify-powered documentation for the Urantia Papers API (https://urantia.dev).
 - `papers.mdx`, `paragraphs.mdx`, `entities.mdx`, `audio.mdx`, `cdn.mdx` — Data guides
 - `mcp-servers.mdx` — MCP server setup (API + Docs servers)
 - `ai-agents.mdx` — AI agent integration guide
-- `sdks.mdx` — TypeScript SDK docs (@urantia/api + @urantia/auth)
+- `sdks/` — TypeScript SDK docs (split into 3 pages)
+  - `overview.mdx` — Install, package comparison, "Using Both Together", demo link
+  - `api.mdx` — @urantia/api usage patterns, endpoint groups, error handling
+  - `auth.mdx` — @urantia/auth OAuth flows (redirect/popup/server), session management, scopes
 - `api-reference/` — Auto-generated endpoint docs from OpenAPI spec (17 endpoints)
 - `concepts/` — Urantia Book concept explainers (14 pages)
 - `quotes/` — Curated quote collections (15 themes)
@@ -27,7 +30,7 @@ Mintlify-powered documentation for the Urantia Papers API (https://urantia.dev).
 
 5 tabs: Guides, API Reference, Concepts, Quotes, Blog
 
-Guides tab groups: Getting Started, Data, Integrations (MCP Servers, AI Agents, SDKs), More, Legal
+Guides tab groups: Getting Started, Data, SDKs (Overview, @urantia/api, @urantia/auth), Integrations (MCP Servers, AI Agents), Donate, Legal
 
 ## Commands
 
@@ -38,3 +41,4 @@ Guides tab groups: Getting Started, Data, Integrations (MCP Servers, AI Agents, 
 
 - No changelog — intentionally removed as unnecessary
 - Config file is `docs.json` (not `mint.json`)
+- Old single `sdks.mdx` was split into `sdks/` directory with 3 focused pages
