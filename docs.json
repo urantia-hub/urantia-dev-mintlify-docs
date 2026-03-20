@@ -196,8 +196,8 @@
     }
   },
   "logo": {
-    "light": "/logo/urantia-dev-mark-dark.svg",
-    "dark": "/logo/urantia-dev-mark-white.svg"
+    "light": "/logo/mark-dark.svg",
+    "dark": "/logo/mark-white.svg"
   },
   "api": {
     "baseUrl": "https://api.urantia.dev"
