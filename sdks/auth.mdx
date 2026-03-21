@@ -125,13 +125,15 @@ When calling `signIn()`, you can request specific scopes:
 
 | Scope | Access |
 |-------|--------|
+| `profile` | Read your profile information |
 | `bookmarks` | Read and write bookmarks |
 | `notes` | Read and write notes |
 | `reading-progress` | Read and write reading progress |
 | `preferences` | Read and write preferences |
+| `app-data` | Read and write your app data |
 
 ```typescript
-await auth.signIn({ scopes: ['bookmarks', 'notes'] })
+await auth.signIn({ scopes: ['profile', 'bookmarks', 'notes'] })
 ```
 
 ## Options
@@ -153,9 +155,40 @@ await auth.signIn({ scopes: ['bookmarks', 'notes'] })
 
 ## Registering Your App
 
-To use `@urantia/auth`, you need a registered OAuth app. Visit [accounts.urantiahub.com/developer](https://accounts.urantiahub.com/developer) to register your app and get an `appId` and `appSecret`.
+To use `@urantia/auth`, you need a registered OAuth app.
 
-When registering, you'll need:
-- **App name** — shown to users on the consent screen
-- **Redirect URIs** — URLs where users are sent after authorization
-- **Scopes** — which permissions your app needs
+<Steps>
+  <Step title="Sign in to the Developer Portal">
+    Go to [accounts.urantiahub.com/apps](https://accounts.urantiahub.com/apps) and sign in with your Urantia account (email or Google).
+  </Step>
+  <Step title="Create a new app">
+    Click **Create app** and fill in:
+    - **App ID** — a unique slug (e.g. `my-reading-app`). Lowercase letters, numbers, and hyphens.
+    - **App Name** — shown to users on the consent screen
+    - **Redirect URIs** — URLs where users are sent after authorization (e.g. `http://localhost:3000/callback` for local dev)
+    - **Scopes** — which permissions your app needs
+  </Step>
+  <Step title="Save your credentials">
+    After creation, you'll see your **App ID** and **App Secret**. The secret is only shown once — save it somewhere secure.
+
+    <Warning>
+      Your app secret is only displayed once. If you lose it, you can rotate it from the app details page, but any existing integrations using the old secret will break.
+    </Warning>
+  </Step>
+  <Step title="Start building">
+    Use your App ID to initialize the SDK:
+
+    ```typescript
+    import { UrantiaAuth } from '@urantia/auth'
+
+    const auth = new UrantiaAuth({
+      appId: 'my-reading-app',
+      redirectUri: 'http://localhost:3000/callback',
+    })
+    ```
+  </Step>
+</Steps>
+
+<Info>
+  You can manage your apps, rotate secrets, and delete apps at any time from the [Developer Portal](https://accounts.urantiahub.com/apps).
+</Info>
