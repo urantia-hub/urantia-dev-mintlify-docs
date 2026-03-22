@@ -73,6 +73,46 @@ curl "https://api.urantia.dev/entities/adam-and-eve/paragraphs?limit=5"
 
 Returns a paginated list of paragraphs that mention the entity, ordered by position in the text.
 
+## Translated entities
+
+All 4,456 entities are available in 5 languages: Spanish, French, Portuguese, German, and Korean. Pass `?lang=` to get translated names, descriptions, and aliases.
+
+```bash
+# Get an entity in Spanish
+curl "https://api.urantia.dev/entities/machiventa-melchizedek?lang=es"
+
+# List beings in French
+curl "https://api.urantia.dev/entities?type=being&lang=fr&limit=10"
+
+# Search entities in German
+curl "https://api.urantia.dev/entities?q=melchizedek&lang=de"
+```
+
+The response includes a `language` field indicating which language was returned:
+
+```json
+{
+  "data": {
+    "id": "machiventa-melchizedek",
+    "name": "Machiventa Melchizedek",
+    "type": "being",
+    "description": "Un Hijo Melchizedek que se encarnó como otorgamiento de emergencia en Urantia...",
+    "language": "es",
+    "citationCount": 55
+  }
+}
+```
+
+If a translation isn't available for the requested language, the API falls back to English and returns `"language": "eng"`.
+
+**Supported languages:** `eng` (default), `es`, `fr`, `pt`, `de`, `ko`
+
+To see translation progress across all languages, use the `/languages` endpoint:
+
+```bash
+curl https://api.urantia.dev/languages
+```
+
 ## Inline entities on paragraphs
 
 You can also include entity mentions directly on paragraph responses using `?include=entities`:

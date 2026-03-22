@@ -127,6 +127,40 @@ await api.me.preferences.update({ theme: 'dark', fontSize: 18 })
 const { data: prefs } = await api.me.preferences.get()
 ```
 
+### Languages
+
+```typescript
+// List available languages with translation progress
+const { data: languages } = await api.languages.list()
+// [{ code: "eng", name: "English", entityCount: 4456, paragraphCount: 16570 }, ...]
+
+// Get an entity in Spanish
+const { data: entity } = await api.entities.get('machiventa-melchizedek', { lang: 'es' })
+console.log(entity.name)        // "Machiventa Melchizedek"
+console.log(entity.description) // Spanish description
+console.log(entity.language)    // "es"
+
+// List entities in French
+const { data: entities } = await api.entities.list({ type: 'being', lang: 'fr' })
+
+// Entity paragraphs in Portuguese
+const { data: mentions } = await api.entities.paragraphs('jesus', { lang: 'pt' })
+
+// Paragraphs in German
+const { data: p } = await api.paragraphs.get('2:0.1', { lang: 'de' })
+
+// Random paragraph in Korean
+const { data: random } = await api.paragraphs.random({ lang: 'ko' })
+```
+
+**Supported languages:** `eng` (English, default), `es` (Spanish), `fr` (French), `pt` (Portuguese), `de` (German), `ko` (Korean).
+
+The `language` field in the response tells you which language was returned. If a translation isn't available for the requested language, the API falls back to English and returns `language: "eng"`.
+
+<Info>
+  Entity translations (names, descriptions, aliases) are available for all 4,456 entities in all 5 languages. Paragraph translations are coming soon.
+</Info>
+
 ## Paragraph References
 
 The SDK accepts all three reference formats interchangeably:
