@@ -36,6 +36,26 @@ curl https://api.urantia.dev/paragraphs/random
 
 Returns a single random paragraph — great for daily quotes, inspiration widgets, or testing.
 
+### Filter by length
+
+Use `minLength` and `maxLength` to filter by character count. This is useful when you need paragraphs of a specific length — for example, voice recording prompts or card-sized quotes.
+
+```bash
+# Paragraphs between 300-800 characters (good for 10-30s narration)
+curl "https://api.urantia.dev/paragraphs/random?minLength=300&maxLength=800"
+
+# Short paragraphs for quote cards
+curl "https://api.urantia.dev/paragraphs/random?maxLength=200"
+
+# Long paragraphs for deep reading
+curl "https://api.urantia.dev/paragraphs/random?minLength=500"
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `minLength` | integer | Minimum character count of paragraph text |
+| `maxLength` | integer | Maximum character count of paragraph text |
+
 ## Context window
 
 Retrieve a paragraph with its surrounding context:

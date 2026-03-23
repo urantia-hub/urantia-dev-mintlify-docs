@@ -640,7 +640,7 @@
                     "Paragraphs"
                 ],
                 "summary": "Get a random paragraph",
-                "description": "Returns a single random paragraph from the Urantia Book. Useful for daily quotes or exploration.\n\nUse `?include=entities` to include typed entity mentions in the response.",
+                "description": "Returns a single random paragraph from the Urantia Book. Useful for daily quotes or exploration.\n\nUse `?include=entities` to include typed entity mentions in the response.\n\nUse `?minLength=N` and/or `?maxLength=N` to filter by character count of the paragraph text.",
                 "parameters": [
                     {
                         "schema": {
@@ -662,6 +662,26 @@
                         "required": false,
                         "name": "format",
                         "in": "query"
+                    },
+                    {
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "required": false,
+                        "name": "minLength",
+                        "in": "query",
+                        "description": "Minimum character count of paragraph text"
+                    },
+                    {
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "required": false,
+                        "name": "maxLength",
+                        "in": "query",
+                        "description": "Maximum character count of paragraph text"
                     }
                 ],
                 "responses": {
