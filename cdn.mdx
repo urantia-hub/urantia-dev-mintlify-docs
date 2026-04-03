@@ -13,6 +13,8 @@ All static data that powers the API is available directly from a public Cloudfla
 | Papers | JSON | 197 | Full paper text with paragraphs, sections, and metadata |
 | Paper audio | MP3 | 197 | Full narration of each paper |
 | Paragraph audio | MP3 | 16,000+ | Individual paragraph narration across 6 voices |
+| Paper videos | MP4 | 197 | Full paper narration with synced text overlay (1080p) |
+| Video thumbnails | PNG | 197 | Paper title cards for video thumbnails |
 | Entities | JSON | 3,000+ | Typed entities (beings, places, concepts) with descriptions |
 | Entity links | JSON | 50,000+ | Paragraph-to-entity citation mappings |
 | Embeddings | JSON | 14,500+ | OpenAI `text-embedding-3-small` vectors (1536-dimensional) |
@@ -47,6 +49,20 @@ https://audio.urantia.dev/1.mp3
 |-------|--------|----------|
 | `tts-1-hd` | `nova`, `echo`, `onyx`, `alloy`, `fable`, `shimmer` | `nova` has full coverage |
 | `tts-1` | `alloy` | Partial |
+
+### Video files
+
+Paper-level videos with narrated audio and synced text overlay:
+
+```bash
+# Paper 1 video (H.264 MP4, 1080p, 30fps)
+https://video.urantiahub.com/tts-1-hd-nova-1.mp4
+
+# Paper 1 thumbnail (PNG, 1920x1080)
+https://video.urantiahub.com/thumbnail-1.png
+```
+
+All 197 papers have videos with the `nova` voice. Videos include animated background, paragraph text fading in/out, section title cards, and intro/outro branding.
 
 ### JSON files
 
