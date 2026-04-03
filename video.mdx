@@ -1,0 +1,65 @@
+---
+title: "Video - Watch and Read Along"
+sidebarTitle: "Video"
+description: "Full paper videos with AI narration and synced text overlay. 197 papers, 1080p, available via API and CDN."
+---
+
+Every paper includes a `video` field — a nested object keyed by TTS voice, or `null` if no video exists.
+
+## Response shape
+
+```json
+{
+  "video": {
+    "nova": {
+      "mp4": "https://video.urantiahub.com/tts-1-hd-nova-1.mp4",
+      "thumbnail": "https://video.urantiahub.com/thumbnail-1.png",
+      "duration": 2336
+    }
+  }
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `mp4` | string | Direct URL to the H.264 MP4 video (1920x1080, 30fps) |
+| `thumbnail` | string | Direct URL to the paper title card PNG (1920x1080) |
+| `duration` | number | Video duration in seconds |
+
+## Available voices
+
+All 197 papers have videos with the `nova` voice. Additional voices may be added in the future.
+
+| Voice | Coverage |
+|-------|----------|
+| `nova` | All 197 papers |
+
+## Accessing video data
+
+Video metadata is included in responses from paper endpoints:
+
+```bash
+# List all papers with video URLs
+curl https://api.urantia.dev/papers
+
+# Get a single paper with video
+curl https://api.urantia.dev/papers/1
+```
+
+## Direct CDN access
+
+Videos and thumbnails are served from `video.urantiahub.com` via Cloudflare R2:
+
+```bash
+# Video (H.264 MP4, 1080p)
+https://video.urantiahub.com/tts-1-hd-nova-1.mp4
+
+# Thumbnail (PNG)
+https://video.urantiahub.com/thumbnail-1.png
+```
+
+See the [CDN page](/cdn) for the full list of available assets.
+
+## YouTube
+
+All papers are also available on the [UrantiaHub YouTube channel](https://youtube.com/@UrantiaHub), with chapter timestamps for section navigation.
