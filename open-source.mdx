@@ -1,0 +1,83 @@
+---
+title: "Open Source"
+sidebarTitle: "Open Source"
+description: "Everything we build is MIT-licensed and free. Here's what that means and how to use it."
+---
+
+## Licensing
+
+All code across the UrantiaHub ecosystem is released under the **MIT License**, meaning you can use, modify, and distribute it freely — including for commercial projects. No permission needed.
+
+| What | License | Details |
+|------|---------|---------|
+| All source code | [MIT](https://opensource.org/licenses/MIT) | Use it however you want |
+| Original content (guides, quotes, docs) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | Public domain dedication |
+| The Urantia Book English text | Public domain | Since 2006 |
+| Audio narrations, embeddings, AI content | Proprietary | Owned by Adams Technologies LLC |
+
+## Repositories
+
+All repos live under the [urantia-hub](https://github.com/urantia-hub) GitHub organization.
+
+### Core Infrastructure
+
+<CardGroup cols={2}>
+  <Card title="urantia-dev-api" icon="server" href="https://github.com/urantia-hub/urantia-dev-api">
+    Hono + Drizzle API on Cloudflare Workers. Full-text search, semantic search, OAuth, MCP server.
+  </Card>
+  <Card title="urantia-dev-sdks" icon="code" href="https://github.com/urantia-hub/urantia-dev-sdks">
+    TypeScript SDKs — @urantia/api (typed client) and @urantia/auth (OAuth/PKCE).
+  </Card>
+  <Card title="urantia-dev-mintlify-docs" icon="book" href="https://github.com/urantia-hub/urantia-dev-mintlify-docs">
+    This documentation site.
+  </Card>
+  <Card title="urantia-data-sources" icon="database" href="https://github.com/urantia-hub/urantia-data-sources">
+    Scripts for managing the Cloudflare R2 data bucket (papers, audio, entities, embeddings).
+  </Card>
+</CardGroup>
+
+### Applications
+
+<CardGroup cols={2}>
+  <Card title="OpenUrantia.com" icon="globe" href="https://github.com/urantia-hub/OpenUrantia.com">
+    UrantiaHub reading platform — Next.js with bookmarks, notes, AI chat, reading progress, daily quotes.
+  </Card>
+  <Card title="urantia-dev-demo" icon="play" href="https://github.com/urantia-hub/urantia-dev-demo">
+    Interactive demo site showcasing API features.
+  </Card>
+  <Card title="urantia-dev-example-app" icon="rocket" href="https://github.com/urantia-hub/urantia-dev-example-app">
+    Minimal Next.js OAuth example app using @urantia/auth.
+  </Card>
+  <Card title="urantia-papers-plugin" icon="plug" href="https://github.com/urantia-hub/urantia-papers-plugin">
+    MCP plugin for Claude Desktop and Cursor.
+  </Card>
+</CardGroup>
+
+### Research & Media
+
+<CardGroup cols={2}>
+  <Card title="urantia-render" icon="video" href="https://github.com/urantia-hub/urantia-render">
+    High-performance Rust video renderer for YouTube narrations.
+  </Card>
+  <Card title="urantia-860x-experiment" icon="flask" href="https://github.com/urantia-hub/urantia-860x-experiment">
+    Computational verification of the 860x wavelength ratio claim against NIST CODATA physics constants.
+  </Card>
+  <Card title="data" icon="folder-open" href="https://github.com/urantia-hub/data">
+    The Urantia Papers in structured JSON + MP3 audio files.
+  </Card>
+</CardGroup>
+
+## Contributing
+
+Every repo has a `README.md` with setup instructions. The general flow:
+
+1. Fork the repo
+2. Create a feature branch
+3. Make your changes
+4. Open a PR
+
+Questions? Reach out at [kelson@urantia.dev](mailto:kelson@urantia.dev).
+
+## Disclaimer
+
+This is an independent community project by [Adams Technologies LLC](https://adamstechnologies.com). It is not affiliated with, endorsed by, or connected with Urantia Foundation. The original English text of *The Urantia Book* is in the public domain. All use of "Urantia" is nominative fair use to identify the subject matter.

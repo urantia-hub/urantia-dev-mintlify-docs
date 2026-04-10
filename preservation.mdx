@@ -1,0 +1,88 @@
+---
+title: "Preservation"
+sidebarTitle: "Preservation"
+description: "How we're ensuring the Urantia Papers remain freely accessible forever — across blockchain, archives, and public repositories."
+---
+
+Throughout history, humanity has repeatedly lost invaluable knowledge. The burning of the Library of Alexandria, the destruction of ancient texts during wars, and the natural decay of physical documents have all contributed to the loss of our collective wisdom.
+
+We're using every tool available to make sure the Urantia Papers can't be locked away, censored, or lost.
+
+## Strategy
+
+Our preservation approach has three layers:
+
+| Layer | Purpose | Status |
+|-------|---------|--------|
+| **Blockchain (Arweave)** | Immutable, decentralized permanent storage | ✅ Live |
+| **Internet Archive** | Timestamped third-party institutional archive | ✅ Live |
+| **Public GitHub** | Open-source, forkable, version-controlled | ✅ Live |
+
+Each layer serves a different purpose. Together, they make the content practically impossible to restrict.
+
+---
+
+## Blockchain Archive (Arweave)
+
+The complete English text is permanently stored on [Arweave](https://www.arweave.org/), a blockchain designed for multi-century data persistence. Once written, content cannot be altered or removed.
+
+Two formats are archived:
+
+| Format | Arweave Transaction ID |
+|--------|----------------------|
+| Structured JSON | [`3RLvenzfBZ60GlOygqu6DtlbEhOWldQSqjGuMSVOg9I`](https://arweave.net/3RLvenzfBZ60GlOygqu6DtlbEhOWldQSqjGuMSVOg9I) |
+| Plain Text | [`0YgTs2SJmIkCHxouFPdN-pWFon0ZnhjYQpg7F2DW70o`](https://arweave.net/0YgTs2SJmIkCHxouFPdN-pWFon0ZnhjYQpg7F2DW70o) |
+
+<Tip>
+  You can access these through any Arweave gateway. The transaction IDs are permanent — bookmark them.
+</Tip>
+
+**Why Arweave?**
+- **Immutability** — content cannot be altered once stored
+- **Decentralization** — no single point of failure
+- **Permanence** — data persists as long as the network exists
+- **Verifiability** — anyone can independently verify the content using the transaction IDs
+
+## Internet Archive
+
+The complete English text (197 papers, 14,500+ paragraphs) in structured JSON format is archived on the Internet Archive:
+
+<Card title="Urantia Papers on Internet Archive" icon="building-columns" href="https://archive.org/details/urantia-papers-english-json-2026">
+  Timestamped, institutionally preserved copy with CC0 license. 202 JSON files covering the full text.
+</Card>
+
+The Internet Archive provides independent, third-party proof that this content was freely dedicated on a specific date — useful if anyone ever disputes the timeline.
+
+## Public GitHub Repositories
+
+All source data, code, and documentation live in public repositories under the [urantia-hub](https://github.com/urantia-hub) GitHub organization.
+
+Key data repo:
+
+<Card title="urantia-hub/data" icon="github" href="https://github.com/urantia-hub/data">
+  The Urantia Papers in structured JSON format and MP3 audio files. MIT licensed.
+</Card>
+
+GitHub provides version history, forkability (anyone can copy the entire repo with one click), and global CDN distribution. Every repo includes a `LICENSE` file and disclaimer.
+
+## OpenTimestamps (Bitcoin-Anchored Proofs)
+
+All MIT license files across the project have been timestamped using [OpenTimestamps](https://opentimestamps.org/), which anchors SHA-256 file hashes to Bitcoin transactions.
+
+This creates cryptographic proof that our license dedications existed on or before a specific date — anchored to the most secure blockchain in existence.
+
+| File | SHA-256 Hash |
+|------|-------------|
+| All `LICENSE` files | `0f880bee4323620b11a287c6ccf7013610e064d0a4943c25f398c149b32d8fa7` |
+
+Proof files (`.ots`) are stored alongside their source files in each repository. Verify with:
+
+```bash
+ots verify LICENSE.ots
+```
+
+## Why This Matters
+
+Every epochal revelation in history has followed the same pattern: institutions form around it, claim authority over it, and gatekeep access. The teachings get locked behind organizations, copyrights, and approval processes.
+
+By distributing the content across multiple platforms, blockchains, and jurisdictions — all under irrevocable open licenses — we're making sure that can't happen here. The content is free now, and it stays free regardless of what happens to any single organization, domain, or platform.

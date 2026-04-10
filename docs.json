@@ -37,6 +37,10 @@
             "pages": ["mcp-servers", "ai-agents"]
           },
           {
+            "group": "Open Source",
+            "pages": ["open-source", "preservation"]
+          },
+          {
             "group": "Donate",
             "pages": ["support"]
           },
@@ -209,7 +213,7 @@
   "openapi": "api-reference/openapi.json",
   "footer": {
     "socials": {
-      "github": "https://github.com/kelsonic",
+      "github": "https://github.com/urantia-hub",
       "website": "https://status.urantia.dev"
     }
   }
