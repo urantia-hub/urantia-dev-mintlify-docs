@@ -67,18 +67,20 @@ GitHub provides version history, forkability (anyone can copy the entire repo wi
 
 ## OpenTimestamps (Bitcoin-Anchored Proofs)
 
-All MIT license files across the project have been timestamped using [OpenTimestamps](https://opentimestamps.org/), which anchors SHA-256 file hashes to Bitcoin transactions.
+All MIT license files and the root `LEGAL.md` have been timestamped using [OpenTimestamps](https://opentimestamps.org/), which anchors SHA-256 file hashes to Bitcoin transactions.
 
-This creates cryptographic proof that our license dedications existed on or before a specific date — anchored to the most secure blockchain in existence.
+This creates cryptographic proof that our license dedications and legal declarations existed on or before a specific date — anchored to the most secure blockchain in existence. All 13 proofs have been upgraded with full Bitcoin attestations and are independently verifiable offline.
 
 | File | SHA-256 Hash |
 |------|-------------|
-| All `LICENSE` files | `0f880bee4323620b11a287c6ccf7013610e064d0a4943c25f398c149b32d8fa7` |
+| All `LICENSE` files (12 repos) | `0f880bee4323620b11a287c6ccf7013610e064d0a4943c25f398c149b32d8fa7` |
+| `LEGAL.md` | Timestamped separately (CC0 dedication, trademark policy, non-affiliation) |
 
 Proof files (`.ots`) are stored alongside their source files in each repository. Verify with:
 
 ```bash
 ots verify LICENSE.ots
+ots verify LEGAL.md.ots
 ```
 
 ## Why This Matters
