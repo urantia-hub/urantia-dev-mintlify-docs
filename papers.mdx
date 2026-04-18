@@ -33,6 +33,18 @@ curl https://api.urantia.dev/papers
 
 Returns metadata for all 197 papers including title, part, and section count.
 
+Add `?include=topEntities` to attach a per-paper aggregate of the most-cited named entities — sorted by paragraph frequency and tier-ranked so beings, places, and concepts surface before orders, races, and religions:
+
+```bash
+curl 'https://api.urantia.dev/papers?include=topEntities' | jq '.data[1].topEntities'
+# [
+#   { "id": "universal-father", "name": "Universal Father", "type": "being", "count": 74 },
+#   { "id": "personality",      "name": "personality",      "type": "concept", "count": 66 },
+#   { "id": "god",              "name": "God",              "type": "being", "count": 46 },
+#   ...
+# ]
+```
+
 ## Read a paper
 
 ```bash
@@ -42,10 +54,22 @@ curl https://api.urantia.dev/papers/1
 
 Returns the full paper with all paragraphs. Each paragraph includes `text`, `htmlText`, `standardReferenceId`, audio URLs, and optional entity mentions.
 
-Add `?include=entities` to get entity annotations on every paragraph:
+Add `?include=entities` to get entity annotations on every paragraph **and** the paper-level `topEntities` aggregate:
 
 ```bash
 curl https://api.urantia.dev/papers/1?include=entities
+```
+
+Prefer a lighter payload? Request just the paper-level aggregate without per-paragraph mentions:
+
+```bash
+curl 'https://api.urantia.dev/papers/1?include=topEntities' | jq '.data.paper.topEntities'
+```
+
+Or request both explicitly:
+
+```bash
+curl 'https://api.urantia.dev/papers/1?include=entities,topEntities'
 ```
 
 ## Get sections
