@@ -33,7 +33,7 @@ curl https://api.urantia.dev/papers
 
 Returns metadata for all 197 papers including title, part, and section count.
 
-Add `?include=topEntities` to attach a per-paper aggregate of the most-cited named entities — sorted by paragraph frequency and tier-ranked so beings, places, and concepts surface before orders, races, and religions:
+Add `?include=topEntities` to attach a per-paper aggregate of the most-cited named entities. Sorted by paragraph citation count descending; ties break so beings, places, and concepts rank above orders, races, and religions (and finally alphabetical):
 
 ```bash
 curl 'https://api.urantia.dev/papers?include=topEntities' | jq '.data[1].topEntities'
